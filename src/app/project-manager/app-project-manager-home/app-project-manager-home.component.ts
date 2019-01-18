@@ -7,6 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppProjectManagerHomeComponent implements OnInit {
 
+  // app initialize variables
+
+  appTitle: string = 'Project Manager';
+
   constructor() { }
 
   ngOnInit() {

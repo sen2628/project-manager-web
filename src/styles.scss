@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "./assets/styles/variables";
+
+// material Icons
+
+$material-icons-font-path: "~material-icons/iconfont/";
+@import "~material-icons/iconfont/material-icons.scss";
+
+// Web fonts open sans and roboto custom imports
+
+@import "./assets/fonts/webfont/fonts-stylesheet.css";
+@import "./assets/fonts/webfont/roboto-stylesheet.css";
