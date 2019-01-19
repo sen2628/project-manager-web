@@ -5,3 +5,55 @@
   font-size: $font-xxl !important;
   color: $black !important;
 }
+
+.app-title-padding {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+.div-padding {
+  padding-top: 0px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+.padding-5px {
+  padding-top: 5px !important;
+  padding-bottom: 0px !important;
+}
+
+.app-menu-spacing {
+  padding-left: 0px !important;
+  padding-right: 30px !important;
+  cursor: pointer !important;
+  font-family: open_sansbold !important;
+  font-size: $font-lg !important;
+}
+
+.app-menu-first-spacing {
+  padding-left: 0px !important;
+  padding-right: 30px !important;
+  cursor: pointer !important;
+  font-family: open_sansbold !important;
+  font-size: $font-lg !important;
+}
+
+.mat-toolbar {
+  background: transparent !important;
+  color: #212121 !important;
+  padding-top: 10px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  padding-bottom: 10px !important;
+}
+
+.selected-menu-color {
+  color: $font-blue !important;
+}
+
+.regular-menu-color {
+  color: $black !important;
+}
