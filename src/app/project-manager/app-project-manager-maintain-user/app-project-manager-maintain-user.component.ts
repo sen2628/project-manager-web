@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppProjectManagerMaintainUserComponent implements OnInit {
 
+  componentTitle: string = 'Maintain User';
+
   constructor() { }
 
   ngOnInit() {

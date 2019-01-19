@@ -1,33 +1,39 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // project main component for single page rendering
 import { AppComponent } from './app.component';
 
+// hammer JS imports
+import 'hammerjs';
 
-// app core components for business functionalities
-import { AppProjectManagerHomeComponent } from './project-manager/app-project-manager-home/app-project-manager-home.component';
-import { AppProjectManagerMaintainUserComponent } from './project-manager/app-project-manager-maintain-user/app-project-manager-maintain-user.component';
-import { AppProjectManagerMaintainProjectTaskComponent } from './project-manager/app-project-manager-maintain-project-task/app-project-manager-maintain-project-task.component';
-import { AppProjectManagerMaintainProjectComponent } from './project-manager/app-project-manager-maintain-project/app-project-manager-maintain-project.component'
+
+// app core components import module for business functionalities
+import { AppProjectManagerComponentImportModule } from './project-manager/app-project-manager-components-imports.modules';
 
 // routing module for navigation
 import { AppRoutingModule } from './shared/app-router/app-routing.module';
 
 //material imports for styling
 import { AppMaterialImportModule } from './shared/app-material/app-material.module';
+
 @NgModule({
   declarations: [
-    AppComponent,
-    AppProjectManagerHomeComponent,
-    AppProjectManagerMaintainProjectComponent,
-    AppProjectManagerMaintainUserComponent,
-    AppProjectManagerMaintainProjectTaskComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule,
     AppRoutingModule,
-    AppMaterialImportModule
+    AppMaterialImportModule,
+    AppProjectManagerComponentImportModule
   ],
   providers: [],
   bootstrap: [AppComponent]

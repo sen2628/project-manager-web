@@ -1,9 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
+// global styles from material theme.
+@import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
+
+// app global variables.
 @import "./assets/styles/variables";
 
 // material Icons
-
 $material-icons-font-path: "~material-icons/iconfont/";
 @import "~material-icons/iconfont/material-icons.scss";
 
@@ -11,3 +14,12 @@ $material-icons-font-path: "~material-icons/iconfont/";
 
 @import "./assets/fonts/webfont/fonts-stylesheet.css";
 @import "./assets/fonts/webfont/roboto-stylesheet.css";
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
