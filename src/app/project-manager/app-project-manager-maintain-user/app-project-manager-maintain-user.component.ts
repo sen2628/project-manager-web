@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+
+
+
 
 @Component({
   selector: 'app-app-project-manager-maintain-user',
@@ -8,6 +11,10 @@ import { Component, OnInit } from '@angular/core';
 export class AppProjectManagerMaintainUserComponent implements OnInit {
 
   componentTitle: string = 'Maintain User';
+  addUpdateButton: string = "Add User";
+  newUpdateFirstName: string = null;
+  newUpdateLastName: string = null;
+  newUpdateEmployeeId: number = null;
 
   constructor() { }
 

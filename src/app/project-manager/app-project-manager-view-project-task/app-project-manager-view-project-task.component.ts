@@ -51,7 +51,14 @@ export class AppProjectManagerViewProjectTaskComponent implements OnInit {
       this.sortAscDscFlag = true;
     }
 
+  }
 
+  editProjectTasks(taskId: number) {
+
+  }
+
+
+  endProjectTasks(taskId: number) {
 
   }
 

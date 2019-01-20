@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'
 import { AppMaterialImportModule } from '../shared/app-material/app-material.module'
 import { AppRoutingModule } from '../shared/app-router/app-routing.module';
 
@@ -17,7 +18,7 @@ import { AppProjectManagerViewProjectTaskComponent } from './app-project-manager
     AppProjectManagerMaintainProjectTaskComponent,
     AppProjectManagerViewProjectTaskComponent,
     AppProjectManagerMaintainProjectComponent],
-  imports: [CommonModule, AppMaterialImportModule, AppRoutingModule],
+  imports: [CommonModule, AppMaterialImportModule, AppRoutingModule, FormsModule],
   exports: [AppProjectManagerHomeComponent,
     AppProjectManagerMaintainUserComponent,
     AppProjectManagerMaintainProjectTaskComponent,
