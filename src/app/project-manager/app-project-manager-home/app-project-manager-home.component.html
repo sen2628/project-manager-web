@@ -1,18 +1,16 @@
-<div class="container div-padding">
+<div class="container-fluid div-padding">
   <div class="app-title-padding">
     <h2 class="app-title-style"> {{appTitle}} </h2>
   </div>
   <mat-toolbar>
-    <div fxLayout="row" fxLayoutAlign="end">
-      <span class="app-menu-first-spacing" (click)="loadMenuComponent('project')" [ngClass]="selectedMenuLink === 'project'? 'selected-menu-color':'regular-menu-color'">Add
-        Project</span>
-      <span class="app-menu-spacing" (click)="loadMenuComponent('task')" [ngClass]="selectedMenuLink === 'task'? 'selected-menu-color':'regular-menu-color'">Add
-        Task</span>
-      <span class="app-menu-spacing" (click)="loadMenuComponent('user')" [ngClass]="selectedMenuLink === 'user'? 'selected-menu-color':'regular-menu-color'">Add
-        User</span>
-      <span class="app-menu-spacing" (click)="loadMenuComponent('vTask')" [ngClass]="selectedMenuLink === 'vTask'? 'selected-menu-color':'regular-menu-color'">View
-        Task</span>
-    </div>
+    <span class="app-menu-first-spacing" (click)="loadMenuComponent('project')" [ngClass]="selectedMenuLink === 'project'? 'selected-menu-color':'regular-menu-color'">Add
+      Project</span>
+    <span class="app-menu-spacing" (click)="loadMenuComponent('task')" [ngClass]="selectedMenuLink === 'task'? 'selected-menu-color':'regular-menu-color'">Add
+      Task</span>
+    <span class="app-menu-spacing" (click)="loadMenuComponent('user')" [ngClass]="selectedMenuLink === 'user'? 'selected-menu-color':'regular-menu-color'">Add
+      User</span>
+    <span class="app-menu-spacing" (click)="loadMenuComponent('vTask')" [ngClass]="selectedMenuLink === 'vTask'? 'selected-menu-color':'regular-menu-color'">View
+      Task</span>
   </mat-toolbar>
   <div class="padding-5px"></div>
   <router-outlet></router-outlet>

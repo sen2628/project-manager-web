@@ -9,6 +9,9 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 // project main component for single page rendering
 import { AppComponent } from './app.component';
 
+// ng-bootstrap
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 // hammer JS imports
 import 'hammerjs';
 
@@ -29,6 +32,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     AppComponent
   ],
   imports: [
+    NgbModule, // ng-bootstrap module
     BrowserModule,
     BrowserAnimationsModule,
     FlexLayoutModule,

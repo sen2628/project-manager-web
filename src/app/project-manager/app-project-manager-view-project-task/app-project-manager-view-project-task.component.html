@@ -1,12 +1,73 @@
-<div class="container div-padding">
-  <form>
-    <div class="d-flex flex-wrap dFlex-wrap">
-      <span class="dFlex-wrap">
-        <label class="header-label">Project:</label>
-      </span>
-      <span>
-        <input class="form-control" type="text" placeholder="Default input">
-      </span>
-    </div>
-  </form>
-</div>
+<form>
+  <div class="d-flex-inline dFlex-wrap">
+    <span class="dFlex-wrap">
+      <label class="header-label">Project:</label>
+    </span>
+    <span class="span-padding">
+      <input class="form-control" class="inputTextFont" type="text" style="width: 300px">
+    </span>
+    <span class="span-padding">
+      <button mat-raised-button class="button-style" color="accent">Search</button>
+    </span>
+    <span class="span-padding">
+      <label class="header-label">Sort Task By:</label>
+    </span>
+    <span class="span-padding">
+      <label class="header-sort-label" [ngClass]="sortByColumn === 'startDate'? 'selected-menu-color':'regular-menu-color'"
+        (click)="sortProjectListView('startDate')">Start Date</label>
+      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'startDate'">arrow_upward</mat-icon>
+      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'startDate'">arrow_downward</mat-icon>
+    </span>
+    <span class="span-padding">
+      <label class="header-sort-label" [ngClass]="sortByColumn === 'endDate'? 'selected-menu-color':'regular-menu-color'"
+        (click)="sortProjectListView('endDate')">End Date</label>
+      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'endDate'">arrow_upward</mat-icon>
+      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'endDate'">arrow_downward</mat-icon>
+    </span>
+    <span class="span-padding">
+      <label class="header-sort-label" [ngClass]="sortByColumn === 'priority'? 'selected-menu-color':'regular-menu-color'"
+        (click)="sortProjectListView('priority')">Priority</label>
+      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'priority'">arrow_upward</mat-icon>
+      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'priority'">arrow_downward</mat-icon>
+    </span>
+    <span class="span-padding">
+      <label class="header-sort-label" [ngClass]="sortByColumn === 'completed'? 'selected-menu-color':'regular-menu-color'"
+        (click)="sortProjectListView('completed')">Completed</label>
+      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'completed'">arrow_upward</mat-icon>
+      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'completed'">arrow_downward</mat-icon>
+    </span>
+  </div>
+  <div class="padding-10px"></div>
+  <div class="padding-10px"></div>
+  <mat-divider class="custom-divider"></mat-divider>
+  <div class="padding-10px"></div>
+  <div class="padding-10px"></div>
+
+  <div class="list-group" *ngFor="let projTaskRows of resultProjectTasks">
+    <mat-card class="mat-card-custom">
+
+      <table class="table table-borderless">
+        <tr>
+          <th class="table-cols1 table-result-header">Task</th>
+          <th class="table-cols2 table-result-header">Parent</th>
+          <th class="table-cols3 table-result-header">Priority</th>
+          <th class="table-cols4 table-result-header">Start Date</th>
+          <th class="table-cols5 table-result-header">End Date</th>
+          <th class="table-cols6 table-result-header"></th>
+        </tr>
+        <tr>
+          <th class="table-cols1 table-result-data">{{projTaskRows.taskDesc}}</th>
+          <th class="table-cols2 table-result-data">{{projTaskRows.parentDesc}}</th>
+          <th class="table-cols3 table-result-data">{{projTaskRows.priority}}</th>
+          <th class="table-cols4 table-result-data">{{projTaskRows.taskStartDate}}</th>
+          <th class="table-cols5 table-result-data">{{projTaskRows.taskEndDate}}</th>
+          <th class="table-cols6 table-result-data"><span class="button-spacing"><button mat-raised-button class="mat-button-row"
+                color="accent">Edit</button></span>
+            <span class="button-spacing"><button mat-raised-button class="mat-button-row" color="accent">End Task</button></span>
+          </th>
+        </tr>
+      </table>
+    </mat-card>
+    <div class="padding-10px"></div>
+  </div>
+</form>
