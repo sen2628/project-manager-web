@@ -68,8 +68,29 @@
     <div class="padding-10px"></div>
     <div class="padding-10px"></div>
     <mat-divider class="custom-divider"></mat-divider>
-    <div class="list-group" *ngFor="let resultUsers of resultUsersList"></div>
-    <mat-card>
+    <div class="padding-10px"></div>
+    <div class="padding-10px"></div>
+    <div class="list-group" *ngFor="let resultUsers of resultUsersList">
+        <mat-card class="custom-card-width">
+            <div class="table-responsive">
+                <table class="table-sm table-borderless">
+                    <tr>
+                        <td class="table-custom-width custom-result">{{resultUsers.firstName}}</td>
+                        <td class="table-button-width"><button class="mat-result-button-row" mat-raised-button color="accent">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td class="table-custom-width custom-result">{{resultUsers.lastName}}</td>
+                        <td class="table-button-width"><button class="mat-result-button-row" mat-raised-button color="accent">Delete</button></td>
+                    </tr>
+                    <tr>
+                        <td class="table-custom-width custom-result">{{resultUsers.employeeId}}</td>
+                        <td class="table-button-width"></td>
+                    </tr>
 
-    </mat-card>
+                </table>
+            </div>
+        </mat-card>
+        <div class="padding-10px"></div>
+        <div class="padding-10px"></div>
+    </div>
 </form>

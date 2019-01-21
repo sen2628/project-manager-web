@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
 
+  projectStepperValue: number = 0;
+
   constructor() { }
 
   ngOnInit() {

@@ -37,3 +37,28 @@
 .padding-10px {
   padding-top: 10px !important;
 }
+
+.custom-card-width {
+  width: 500px !important;
+  background-color: $white !important;
+}
+
+.table-custom-width {
+  width: 350px !important;
+}
+
+.table-button-width {
+  width: 100px !important;
+}
+
+.custom-result {
+  font-family: open_sansbold !important;
+  font-size: $font-md !important;
+  color: $black !important;
+}
+
+.mat-result-button-row {
+  font-family: open_sansregular !important;
+  font-size: $font-base !important;
+  width: 80px !important;
+}

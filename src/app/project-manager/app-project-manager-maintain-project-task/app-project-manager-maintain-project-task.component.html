@@ -1,3 +1,45 @@
-<p>
-  app-project-manager-maintain-project-task works!
-</p>
+<form>
+  <div class="d-flex dFlex-left-wrap">
+    <div class="d-flex flex-column bd-highlight mb-3">
+      <div class="table-responsive">
+        <table class="table-sm table-borderless">
+          <tr>
+            <td class="td-align-right ">
+              <label class="label-header-font">Project:</label>
+            </td>
+            <td class="td-align-right ">
+              <input class="form-control" type="text" style="width: 300px" />
+            </td>
+            <td class="td-align-right ">
+              <button mat-raised-button class="mat-button-row">Search</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-align-right">
+              <label class="label-header-font">Task:</label>
+            </td>
+            <td colspan=2 class="td-align-right">
+              <input class="form-control" type="text" />
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <mat-checkbox class="checkbox-font">
+                Parent Task
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr>
+            <td><label class="label-header-font">Priority:</label></td>
+            <td>
+              <mat-slider class="task-slider-margin" max="30" min="0" step="1" thumbLabel=true [(ngModel)]="projectStepperValue"
+                [ngModelOptions]="{standalone: yes}">
+              </mat-slider>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
