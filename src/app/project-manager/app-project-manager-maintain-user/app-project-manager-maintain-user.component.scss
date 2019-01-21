@@ -1,7 +1,39 @@
+@import "../../../assets/styles/variables";
+
 .dFlex-left-wrap {
   padding-left: 0px !important;
   padding-right: 0px !important;
   vertical-align: middle !important;
   justify-content: flex-start !important;
   justify-items: flex-start !important;
+}
+
+.custom-divider {
+  background-color: #e0e0e0 !important;
+}
+
+.label-header-font {
+  font-family: open_sansbold !important;
+  font-size: $font-lg !important;
+}
+
+.td-align-right {
+  align-content: flex-end !important;
+  align-items: flex-end !important;
+  vertical-align: middle !important;
+  text-align: right !important;
+}
+
+.button-padding-right {
+  padding-right: 10px !important;
+}
+
+.mat-button-row {
+  font-family: open_sansregular !important;
+  font-size: $font-md !important;
+  background-color: $font-blue !important;
+}
+
+.padding-10px {
+  padding-top: 10px !important;
 }

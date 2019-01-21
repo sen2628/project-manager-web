@@ -1,27 +1,75 @@
 <form>
     <div class="d-flex dFlex-left-wrap">
-
         <div class="d-flex flex-column bd-highlight mb-3">
-            <div class="p-2 bd-highlight">
-                <div class="d-flex justify-content-start"><label>First Name:</label>
-                    <input class="form-control" type="text" [(ngModel)]="newUpdateFirstName" [ngModelOptions]="{standalone:true}"
-                        style="width: 300px"></div>
+            <div class="table-responsive">
+                <table class="table-sm table-borderless">
+                    <tr>
+                        <td class="td-align-right"><label class="label-header-font">First Name:</label></td>
+                        <td class="td-align-right"><input class="form-control" type="text" [(ngModel)]="newUpdateFirstName"
+                                [ngModelOptions]="{standalone:true}" style="width: 300px"></td>
+                    </tr>
 
-            </div>
-            <div class="p-2 bd-highlight">
-                <div class="d-flex justify-content-start">
-                    <label>Last Name:</label>
-                    <input class="form-control" type="text" [(ngModel)]="newUpdateLastName" [ngModelOptions]="{standalone:true}"
-                        style="width: 300px">
-                </div>
-            </div>
-            <div class="p-2 bd-highlight">
-                <div class="d-flex justify-content-start">
-                    <label>Employee ID:</label>
-                    <input class="form-control" type="text" [(ngModel)]="newUpdateEmployeeId" [ngModelOptions]="{standalone:true}"
-                        style="width: 300px">
-                </div>
+                    <tr>
+                        <td class="td-align-right"><label class="label-header-font">Last Name:</label></td>
+                        <td class="td-align-right"><input class="form-control" type="text" [(ngModel)]="newUpdateLastName"
+                                [ngModelOptions]="{standalone:true}" style="width: 300px"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="td-align-right"><label class="label-header-font">Employee ID:</label></td>
+                        <td class="td-align-right"><input class="form-control" type="text" [(ngModel)]="newUpdateEmployeeId"
+                                [ngModelOptions]="{standalone:true}" style="width: 300px"></td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td class="td-align-right">
+                            <button mat-raised-button class="mat-button-row">Add</button>
+                            <span class="button-padding-right"></span>
+                            <button mat-raised-button class="mat-button-row">Reset </button>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
+    <mat-divider class="custom-divider"></mat-divider>
+    <div class="padding-10px"></div>
+    <div class="padding-10px"></div>
+    <div class="d-flex-inline dFlex-wrap">
+        <span class="span-padding">
+            <input class="form-control" class="inputTextFont" type="text" style="width: 300px">
+        </span>
+        <span class="span-padding">
+            <button mat-raised-button class="button-style" color="accent">Search</button>
+        </span>
+        <span class="span-padding">
+            <label class="header-label">Sort Task By:</label>
+        </span>
+        <span class="span-padding">
+            <label class="header-sort-label" [ngClass]="sortByColumn === 'firstName'? 'selected-menu-color':'regular-menu-color'"
+                (click)="sortProjectListView('firstName')">First Name</label>
+            <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'firstName'">arrow_upward</mat-icon>
+            <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'firstName'">arrow_downward</mat-icon>
+        </span>
+        <span class="span-padding">
+            <label class="header-sort-label" [ngClass]="sortByColumn === 'lastName'? 'selected-menu-color':'regular-menu-color'"
+                (click)="sortProjectListView('lastName')">Last Name</label>
+            <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'lastName'">arrow_upward</mat-icon>
+            <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'lastName'">arrow_downward</mat-icon>
+        </span>
+        <span class="span-padding">
+            <label class="header-sort-label" [ngClass]="sortByColumn === 'userId'? 'selected-menu-color':'regular-menu-color'"
+                (click)="sortProjectListView('userId')">Id</label>
+            <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'userId'">arrow_upward</mat-icon>
+            <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'userId'">arrow_downward</mat-icon>
+        </span>
+    </div>
+    <div class="padding-10px"></div>
+    <div class="padding-10px"></div>
+    <mat-divider class="custom-divider"></mat-divider>
+    <div class="list-group" *ngFor="let resultUsers of resultUsersList"></div>
+    <mat-card>
+
+    </mat-card>
 </form>
