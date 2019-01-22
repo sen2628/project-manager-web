@@ -1,0 +1,77 @@
+@import "../../../assets/styles/variables";
+
+.mat-button-row {
+  font-family: open_sansregular !important;
+  font-size: $font-md !important;
+  background-color: $font-blue !important;
+  color: $white !important;
+}
+
+.mat-button-row1 {
+  font-family: open_sansregular !important;
+  font-size: $font-md !important;
+  background-color: lightblue !important;
+  color: $black !important;
+  font-weight: bold !important;
+}
+
+.mat-button-row2 {
+  font-family: open_sansregular !important;
+  font-size: $font-md !important;
+  background-color: lightblue !important;
+  color: $black !important;
+  font-weight: bold !important;
+  width: 100px !important;
+}
+
+.button-spacing {
+  padding-right: 10px !important;
+}
+
+.padding-10px {
+  padding-top: 10px !important;
+}
+
+.label-header-font {
+  font-family: open_sansbold !important;
+  font-size: $font-lg !important;
+}
+
+.td-align-right {
+  align-content: flex-end !important;
+  align-items: flex-end !important;
+  vertical-align: middle !important;
+  text-align: right !important;
+}
+
+.custom-card-width {
+  width: 1000px !important;
+  background-color: $white !important;
+}
+
+.zero-padding {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  align-items: flex-start !important;
+  align-content: flex-start !important;
+  vertical-align: middle !important;
+}
+
+.td-align-right {
+  align-items: flex-end !important;
+  align-content: flex-end !important;
+  vertical-align: middle !important;
+}
+
+.td-align-center {
+  align-items: center !important;
+  align-content: center !important;
+  vertical-align: middle !important;
+}
+
+.label-regular-font {
+  font-family: open_sansregular !important;
+  font-size: $font-lg !important;
+}

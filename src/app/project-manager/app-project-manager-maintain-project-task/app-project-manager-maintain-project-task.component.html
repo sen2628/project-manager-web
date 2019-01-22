@@ -4,7 +4,7 @@
       <div class="table-responsive">
         <table class="table-sm table-borderless">
           <tr>
-            <td class="td-align-right ">
+            <td class="td-align-right">
               <label class="label-header-font">Project:</label>
             </td>
             <td class="td-align-right ">
@@ -34,12 +34,63 @@
             <td><label class="label-header-font">Priority:</label></td>
             <td>
               <mat-slider class="task-slider-margin" max="30" min="0" step="1" thumbLabel=true [(ngModel)]="projectStepperValue"
-                [ngModelOptions]="{standalone: yes}">
+                [ngModelOptions]="{standalone: yes}" color="primary">
               </mat-slider>
             </td>
           </tr>
         </table>
       </div>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="padding-10px"></div>
+  <div class="padding-10px"></div>
+  <div class="d-flex dFlex-left-wrap">
+    <div class="table-responsive">
+      <table class="table-sm table-borderless">
+        <tr>
+          <td class="td-align-right"><label class="label-header-font">Parent Task:</label></td>
+          <td class="td-align-right"><input class="form-control" type="text" /></td>
+          <td class="td-align-right" colspan=2><button mat-raised-button class="mat-button-row"> Search</button></td>
+        </tr>
+        <tr>
+          <td class="td-align-right"><label class="label-header-font">Start Date:</label></td>
+          <td colspan=2>
+        <tr>
+          <td>
+            <mat-form-field>
+              <input matInput [matDatepicker]="picker" placeholder="Start Date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </td>
+          <td><label class="label-header-font">End Date:</label></td>
+          <td class="td-align-right">
+            <mat-form-field>
+              <input matInput [matDatepicker]="picker1" placeholder="End Date">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </td>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="td-align-right"><label class="label-header-font">User:</label></td>
+          <td colspan=2>
+        <tr>
+          <td class="td-align-right"><input class="form-control" type="text" /></td>
+          <td class="td-align-right"><button mat-raised-button class="mat-button-row">Search</button></td>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="td-align-right" colspan=4><button mat-raised-button class="mat-button-row1">{{taskButtonTitle}}</button>
+            <span class="button-spacing"></span>
+            <button mat-raised-button class="mat-button-row1">Reset</button>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </form>

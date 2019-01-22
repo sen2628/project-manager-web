@@ -1,3 +1,173 @@
-<p>
-  app-project-manager-maintain-project works!
-</p>
+<div class="form-group">
+  <div class="d-flex dFlex-left-wrap">
+    <div class="table-responsive">
+      <table class="table-sm table-borderless">
+        <tr>
+          <td class="td-align-right"><label class="label-header-font">Project:</label></td>
+          <td colspan=2><input class="form-control" type="text" /></td>
+        </tr>
+        <tr>
+          <td class="td-align-right">
+            <mat-checkbox class="label-header-font">
+              Set Start and End Date:
+            </mat-checkbox>
+
+          </td>
+          <td colspan=2>
+        <tr>
+          <td>
+            <mat-form-field>
+              <input matInput [matDatepicker]="picker" placeholder="Start Date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field>
+              <input matInput [matDatepicker]="picker1" placeholder="End Date">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </td>
+        </tr>
+        </td>
+        </tr>
+
+        <tr>
+          <td class="td-align-right"><label class="label-header-font">Priority:</label></td>
+          <td colspan=2>
+            <mat-slider class="task-slider-margin" max="30" min="0" step="1" thumbLabel=true [(ngModel)]="projectStepperValue"
+              [ngModelOptions]="{standalone: yes}" color="primary">
+            </mat-slider>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-align-right"><label class="label-header-font">Manager:</label></td>
+          <td><input class="form-control" type="text" /></td>
+          <td class="td-align-right"><button mat-raised-button class="mat-button-row">Search</button></td>
+        </tr>
+        <tr class="padding-10px">
+        </tr>
+        <tr>
+          <td colspan=3 class="td-align-right">
+            <button mat-raised-button class="mat-button-row1" (click)="updateAddProjectToDatabase()">Add Project</button>
+            <span class="button-spacing"></span>
+            <button mat-raised-button class="mat-button-row1" (click)="resetAddProjectDetails()">Reset</button>
+          </td>
+        </tr>
+      </table>
+      <div class="padding-10px"></div>
+      <div class="padding-10px"></div>
+      <mat-divider></mat-divider>
+      <div class="padding-10px"></div>
+      <div class="padding-10px"></div>
+    </div>
+  </div>
+  <div class="d-flex-inline dFlex-wrap">
+    <span class="span-padding">
+      <input class="form-control" class="inputTextFont" type="text" style="width: 300px" [(ngModel)]="searchTerm" />
+    </span>
+    <span class="span-padding">
+      <button mat-raised-button class="button-style" color="accent">Search</button>
+    </span>
+    <span class="span-padding">
+      <label class="header-label">Sort Task By:</label>
+    </span>
+    <span class="span-padding">
+      <label class="header-sort-label" [ngClass]="sortByColumn === 'startDate'? 'selected-menu-color':'regular-menu-color'"
+        (click)="sortProjectListView('startDate')">Start Date</label>
+      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'startDate'">arrow_upward</mat-icon>
+      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'startDate'">arrow_downward</mat-icon>
+    </span>
+    <span class="span-padding">
+      <label class="header-sort-label" [ngClass]="sortByColumn === 'endDate'? 'selected-menu-color':'regular-menu-color'"
+        (click)="sortProjectListView('endDate')">End Date</label>
+      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'endDate'">arrow_upward</mat-icon>
+      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'endDate'">arrow_downward</mat-icon>
+    </span>
+    <span class="span-padding">
+      <label class="header-sort-label" [ngClass]="sortByColumn === 'priority'? 'selected-menu-color':'regular-menu-color'"
+        (click)="sortProjectListView('priority')">Priority</label>
+      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'priority'">arrow_upward</mat-icon>
+      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'priority'">arrow_downward</mat-icon>
+    </span>
+    <span class="span-padding">
+      <label class="header-sort-label" [ngClass]="sortByColumn === 'completed'? 'selected-menu-color':'regular-menu-color'"
+        (click)="sortProjectListView('completed')">Completed</label>
+      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'completed'">arrow_upward</mat-icon>
+      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'completed'">arrow_downward</mat-icon>
+    </span>
+  </div>
+  <div class="padding-10px"></div>
+  <div class="padding-10px"></div>
+  <mat-divider class="custom-divider"></mat-divider>
+  <div class="padding-10px"></div>
+  <div class="padding-10px"></div>
+  <div class="list-group" *ngFor="let resultProjects of filterResultProjectList">
+    <mat-card class="custom-card-width">
+
+      <mat-grid-list cols="5">
+        <mat-grid-tile colspan="3" rowspan="1">
+          <div class="table-responsive">
+            <table class="table-sm table-borderless zero-padding">
+              <tr>
+                <td colspan=1 class="zero-padding td-align-right">
+                  <label class="label-header-font">Project:</label>
+                </td>
+                <td colspan=3 class="zero-padding label-regular-font">
+                  {{resultProjects.projectName}}
+                </td>
+              </tr>
+              <tr>
+                <td class="zero-padding td-align-right"><label class="label-header-font">No Of Tasks:</label></td>
+                <td class="zero-padding label-regular-font">{{resultProjects.totalTasks}}</td>
+                <td class="zero-padding td-align-right"><label class="label-header-font">Completed:</label></td>
+                <td class="zero-padding label-regular-font">{{resultProjects.completeTasks}}</td>
+              </tr>
+              <tr>
+                <td class="zero-padding td-align-right"><label class="label-header-font">Start Date:</label></td>
+                <td class="zero-padding label-regular-font">{{resultProjects.projectStartDate}}</td>
+                <td class="zero-padding td-align-right"><label class="label-header-font">End Date:</label></td>
+                <td class="zero-padding label-regular-font">{{resultProjects.projectEndDate}}</td>
+              </tr>
+            </table>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1" rowspan="1">
+          <div class="table-responsive">
+            <table class="table-sm table-borderless zero-padding">
+              <tr>
+                <td class="zero-padding  td-align-center">
+                  <label class="label-header-font">Priority</label>
+                </td>
+              </tr>
+              <tr>
+                <td class="zero-padding  td-align-center label-regular-font">
+                  {{resultProjects.priority}}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1" rowspan="1">
+          <div class="table-responsive">
+            <table class="table-sm table-borderless zero-padding">
+              <tr>
+                <td class="zero-padding  td-align-center">
+                  <button mat-raised-button class="mat-button-row2" (click)="setProjectDetailsForUpdate()">Update</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="zero-padding  td-align-center">
+                  <button mat-raised-button class="mat-button-row2" (click)="updateAddProjectToDatabase()">Suspend</button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card>
+    <div class="padding-10px"></div>
+    <div class="padding-10px"></div>
+  </div>
+</div>

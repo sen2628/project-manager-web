@@ -3,10 +3,11 @@ import { ViewTasks } from './project_manager_view_tasks.model';
 export class ViewProjectTasks {
   projectId: number;
   projectName: string;
-  projectStartDate: Date;
-  projectEndDate: Date;
+  projectStartDate: string;
+  projectEndDate: string;
   userId: number;
   priority: number;
-  statusId: number;
-  tasks: ViewTasks[];
+  status: string;
+  completeTasks: number;
+  totalTasks: number;
 }

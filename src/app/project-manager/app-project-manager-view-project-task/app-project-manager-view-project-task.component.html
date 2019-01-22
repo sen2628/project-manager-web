@@ -68,9 +68,9 @@
             <th class="table-cols3 table-result-data">{{projTaskRows.priority}}</th>
             <th class="table-cols4 table-result-data">{{projTaskRows.taskStartDate}}</th>
             <th class="table-cols5 table-result-data">{{projTaskRows.taskEndDate}}</th>
-            <th class="table-cols6 table-result-data"><span class="button-spacing"><button mat-raised-button class="mat-button-row"
-                  color="accent" (click)="editProjectTasks(projTaskRows.taskId)">Edit</button></span>
-              <span class="button-spacing"><button mat-raised-button class="mat-button-row" color="accent" (click)="endProjectTasks(projTaskRows.taskId)">End
+            <th class="table-cols6 table-result-data"><span class="button-spacing"><button mat-raised-button class="mat-button-row1"
+                  (click)="editProjectTasks(projTaskRows.taskId)">Edit</button></span>
+              <span class="button-spacing"><button mat-raised-button class="mat-button-row1" (click)="endProjectTasks(projTaskRows.taskId)">End
                   Task</button></span>
             </th>
           </tr>

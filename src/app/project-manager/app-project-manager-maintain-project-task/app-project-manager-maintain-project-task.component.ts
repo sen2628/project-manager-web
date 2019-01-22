@@ -8,10 +8,18 @@ import { Component, OnInit } from '@angular/core';
 export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
 
   projectStepperValue: number = 0;
+  taskStartDate = new Date();
+  taskEndDate = new Date();
 
-  constructor() { }
+  taskButtonTitle: string = "Add Task";
+
+  constructor() {
+
+  }
 
   ngOnInit() {
+    this.taskButtonTitle = "Add Task";
+    this.projectStepperValue = 0;
   }
 
 }
