@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ViewUsers } from '../project-manager-models/project_manager_user.model';
+import { Sort } from '@angular/material';
+
 
 const tempResults: ViewUsers[] = [
   { "userId": 1, "firstName": "Senthilkumar", "lastName": "Rajendran", "employeeId": 10001 },
@@ -21,31 +23,53 @@ export class AppProjectManagerMaintainUserComponent implements OnInit {
   newUpdateEmployeeId: number = null;
 
   resultUsersList: ViewUsers[] = [];
+  resultUsersListSortedData: ViewUsers[] = [];
 
 
   sortByColumn: string = null;
-  sortAscDscFlag: boolean;
 
+  constructor() {
 
-  constructor() { }
-
-  ngOnInit() {
-
-    this.resultUsersList = tempResults;
+    this.setUserListData();
+    this.resultUsersListSortedData = this.resultUsersList.slice();
 
   }
 
+  ngOnInit() {
+
+  }
+
+  setUserListData() {
+    this.resultUsersList = tempResults;
+  }
 
   sortProjectListView(sortByString: string) {
 
     this.sortByColumn = sortByString;
 
-    if (this.sortAscDscFlag) {
-      this.sortAscDscFlag = false;
-    } else {
-      this.sortAscDscFlag = true;
-    }
-
   }
 
+  sortData(sort: Sort) {
+    const data = this.resultUsersList.slice();
+    if (!sort.active || sort.direction === '') {
+      this.resultUsersListSortedData = data;
+      return;
+    }
+
+    this.resultUsersListSortedData =
+      data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        switch (sort.active) {
+          case 'firstName': return compare(a.firstName, b.firstName, isAsc);
+          case 'lastName': return compare(a.lastName, b.lastName, isAsc);
+          case 'employeeId': return compare(a.employeeId, b.employeeId, isAsc);
+          default: return 0;
+        }
+      });
+  }
+
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

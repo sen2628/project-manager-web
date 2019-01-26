@@ -13,7 +13,7 @@ import { AppHttpResponseHandler } from './app-http-response-handler.service';
 @Injectable()
 export class AppHttpService {
   private baseUrl = '';
-  constructor(private http: Http, private responseHandler: MFHttpResponseHandler) {
+  constructor(private http: Http, private responseHandler: AppHttpResponseHandler) {
     this.baseUrl = '';
   }
 

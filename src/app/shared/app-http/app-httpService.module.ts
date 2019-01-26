@@ -15,8 +15,8 @@ import { Observable } from 'rxjs';
 export class AppHttpServiceModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MFHttpServiceModule,
-      providers: [MFHttpService, MFHttpResponseHandler]
+      ngModule: AppHttpServiceModule,
+      providers: [AppHttpService, AppHttpResponseHandler]
     };
   }
 }

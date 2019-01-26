@@ -12,33 +12,25 @@
           <td>
             <button mat-raised-button class="button-style" color="accent">Search</button>
           </td>
-          <td>
+          <td matSort (matSortChange)="sortData($event)">
             <span class="span-padding">
               <label class="header-label">Sort Task By:</label>
             </span>
             <span class="span-padding">
               <label class="header-sort-label" [ngClass]="sortByColumn === 'startDate'? 'selected-menu-color':'regular-menu-color'"
-                (click)="sortProjectListView('startDate')">Start Date</label>
-              <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'startDate'">arrow_upward</mat-icon>
-              <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'startDate'">arrow_downward</mat-icon>
+                mat-sort-header="taskStartDate" (click)="sortProjectListView('startDate')">Start Date</label>
             </span>
             <span class="span-padding">
               <label class="header-sort-label" [ngClass]="sortByColumn === 'endDate'? 'selected-menu-color':'regular-menu-color'"
-                (click)="sortProjectListView('endDate')">End Date</label>
-              <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'endDate'">arrow_upward</mat-icon>
-              <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'endDate'">arrow_downward</mat-icon>
+                mat-sort-header="taskEndDate" (click)="sortProjectListView('endDate')">End Date</label>
             </span>
             <span class="span-padding">
               <label class="header-sort-label" [ngClass]="sortByColumn === 'priority'? 'selected-menu-color':'regular-menu-color'"
-                (click)="sortProjectListView('priority')">Priority</label>
-              <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'priority'">arrow_upward</mat-icon>
-              <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'priority'">arrow_downward</mat-icon>
+                mat-sort-header="priority" (click)="sortProjectListView('priority')">Priority</label>
             </span>
             <span class="span-padding">
               <label class="header-sort-label" [ngClass]="sortByColumn === 'completed'? 'selected-menu-color':'regular-menu-color'"
-                (click)="sortProjectListView('completed')">Completed</label>
-              <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'completed'">arrow_upward</mat-icon>
-              <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'completed'">arrow_downward</mat-icon>
+                mat-sort-header="taskStatus" (click)="sortProjectListView('completed')">Completed</label>
             </span>
           </td>
         </tr>
@@ -50,7 +42,7 @@
     <div class="padding-10px"></div>
     <div class="padding-10px"></div>
 
-    <div class="list-group" *ngFor="let projTaskRows of resultProjectTasks">
+    <div class="list-group" *ngFor="let projTaskRows of resultProjectTasksSortedData">
       <mat-card class="mat-card-custom">
 
         <table class="table table-borderless">
@@ -63,16 +55,18 @@
             <th class="table-cols6 table-result-header"></th>
           </tr>
           <tr>
-            <th class="table-cols1 table-result-data">{{projTaskRows.taskDesc}}</th>
-            <th class="table-cols2 table-result-data">{{projTaskRows.parentDesc}}</th>
-            <th class="table-cols3 table-result-data">{{projTaskRows.priority}}</th>
-            <th class="table-cols4 table-result-data">{{projTaskRows.taskStartDate}}</th>
-            <th class="table-cols5 table-result-data">{{projTaskRows.taskEndDate}}</th>
-            <th class="table-cols6 table-result-data"><span class="button-spacing"><button mat-raised-button class="mat-button-row1"
-                  (click)="editProjectTasks(projTaskRows.taskId)">Edit</button></span>
+            <td class="table-cols1 table-result-data">{{projTaskRows.taskDesc}}</td>
+            <td class="table-cols2 table-result-data">{{projTaskRows.parentDesc}}</td>
+            <td class="table-cols3 table-result-data">{{projTaskRows.priority}}</td>
+            <td class="table-cols4 table-result-data">{{projTaskRows.taskStartDate}}</td>
+            <td class="table-cols5 table-result-data">{{projTaskRows.taskEndDate}}</td>
+            <td class="table-cols6 table-result-data" *ngIf="projTaskRows.taskStatus !== 'Completed'"><span class="button-spacing"><button
+                  mat-raised-button class="mat-button-row1" (click)="editProjectTasks(projTaskRows.taskId)">Edit</button></span>
               <span class="button-spacing"><button mat-raised-button class="mat-button-row1" (click)="endProjectTasks(projTaskRows.taskId)">End
                   Task</button></span>
-            </th>
+            </td>
+            <td class="table-cols6 table-result-data" *ngIf="projTaskRows.taskStatus === 'Completed'">
+              <label class="label--completed-padding" style="background-color: aquamarine">Completed</label></td>
           </tr>
         </table>
       </mat-card>

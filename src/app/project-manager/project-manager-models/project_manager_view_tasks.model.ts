@@ -8,4 +8,5 @@ export class ViewTasks {
   priority: number;
   taskStartDate: string;
   taskEndDate: string;
+  taskStatus: string;
 }

@@ -14,6 +14,10 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
   taskButtonTitle: string = "Add Task";
 
   constructor() {
+    this.taskButtonTitle = "Add Task";
+    this.projectStepperValue = 0;
+
+
 
   }
 

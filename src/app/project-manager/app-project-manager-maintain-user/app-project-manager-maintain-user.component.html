@@ -36,7 +36,7 @@
     <mat-divider class="custom-divider"></mat-divider>
     <div class="padding-10px"></div>
     <div class="padding-10px"></div>
-    <div class="d-flex-inline dFlex-wrap">
+    <div class="d-flex-inline dFlex-wrap" matSort (matSortChange)="sortData($event)">
         <span class="span-padding">
             <input class="form-control" class="inputTextFont" type="text" style="width: 300px">
         </span>
@@ -44,25 +44,19 @@
             <button mat-raised-button class="button-style" color="accent">Search</button>
         </span>
         <span class="span-padding">
-            <label class="header-label">Sort Task By:</label>
+            <label class="header-label">Sort Users By:</label>
         </span>
         <span class="span-padding">
             <label class="header-sort-label" [ngClass]="sortByColumn === 'firstName'? 'selected-menu-color':'regular-menu-color'"
-                (click)="sortProjectListView('firstName')">First Name</label>
-            <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'firstName'">arrow_upward</mat-icon>
-            <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'firstName'">arrow_downward</mat-icon>
+                mat-sort-header="firstName" (click)="sortProjectListView('firstName')">First Name</label>
         </span>
         <span class="span-padding">
             <label class="header-sort-label" [ngClass]="sortByColumn === 'lastName'? 'selected-menu-color':'regular-menu-color'"
-                (click)="sortProjectListView('lastName')">Last Name</label>
-            <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'lastName'">arrow_upward</mat-icon>
-            <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'lastName'">arrow_downward</mat-icon>
+                mat-sort-header="lastName" (click)="sortProjectListView('lastName')">Last Name</label>
         </span>
         <span class="span-padding">
             <label class="header-sort-label" [ngClass]="sortByColumn === 'userId'? 'selected-menu-color':'regular-menu-color'"
-                (click)="sortProjectListView('userId')">Id</label>
-            <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'userId'">arrow_upward</mat-icon>
-            <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'userId'">arrow_downward</mat-icon>
+                mat-sort-header="employeeId" (click)="sortProjectListView('userId')">Id</label>
         </span>
     </div>
     <div class="padding-10px"></div>
@@ -70,7 +64,7 @@
     <mat-divider class="custom-divider"></mat-divider>
     <div class="padding-10px"></div>
     <div class="padding-10px"></div>
-    <div class="list-group" *ngFor="let resultUsers of resultUsersList">
+    <div class="list-group" *ngFor="let resultUsers of resultUsersListSortedData">
         <mat-card class="custom-card-width">
             <div class="table-responsive">
                 <table class="table-sm table-borderless">
