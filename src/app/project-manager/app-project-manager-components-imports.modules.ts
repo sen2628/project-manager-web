@@ -12,6 +12,7 @@ import { AppProjectManagerMaintainProjectComponent } from './app-project-manager
 import { AppProjectManagerViewProjectTaskComponent } from './app-project-manager-view-project-task/app-project-manager-view-project-task.component';
 import { AppProjectManagerModalComponent, ProjectManagerDisplayComponent } from './app-project-manager-modal/app-project-manager-modal.component';
 import { NgbActiveModal, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { ProjectUserService } from './project-manager-service/project-manager-user.service';
 
 
 @NgModule({
@@ -22,6 +23,8 @@ import { NgbActiveModal, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-boots
     AppProjectManagerMaintainProjectComponent,
     AppProjectManagerModalComponent, ProjectManagerDisplayComponent],
   imports: [CommonModule, AppMaterialImportModule, AppRoutingModule, FormsModule, NgbActiveModal, NgbModal, NgbModalConfig],
+  providers: [ProjectUserService],
+  entryComponents: [AppProjectManagerModalComponent],
   exports: [AppProjectManagerHomeComponent,
     AppProjectManagerMaintainUserComponent,
     AppProjectManagerMaintainProjectTaskComponent,

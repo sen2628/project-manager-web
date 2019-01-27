@@ -25,6 +25,8 @@ import { AppRoutingModule } from './shared/app-router/app-routing.module';
 //material imports for styling
 import { AppMaterialImportModule } from './shared/app-material/app-material.module';
 import { LayoutModule } from '@angular/cdk/layout';
+import { APP_BASE_HREF } from "@angular/common";
+
 
 
 @NgModule({
@@ -44,7 +46,11 @@ import { LayoutModule } from '@angular/cdk/layout';
     AppProjectManagerComponentImportModule,
     LayoutModule
   ],
-  providers: [],
+  providers: [{
+    provide: APP_BASE_HREF,
+    useValue: "/"
+  }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
