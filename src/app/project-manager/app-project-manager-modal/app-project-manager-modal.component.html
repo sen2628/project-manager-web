@@ -1,0 +1,26 @@
+<div class="modal-header modal-header-color">
+  <h4 class="modal-title" id="modal-basic-title">{{errorHeader}}</h4>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="form-group">
+      <label class="error-sub-header">{{errorSubHeader}}</label>
+      <label class="error-single-msg">{{errorSingleMsg}}</label>
+      <span *ngFor="let errorDet of errorDetails; let errorIdx=index" class="error-content">
+        <p><a class="bullet-space" *ngIf="stringIndex">{{errorIdx + 1}}.</a><a [innerText]="errorDet.replace('/n','<br>')">{{errorDet}}</a></p>
+      </span>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <div *ngIf="!isConfirmation">
+    <button mat-raised-button (click)="activeModal.close('Ok click')">Ok</button>
+  </div>
+  <div *ngIf="isConfirmation">
+    <span>
+      <button mat-raised-button class="mat-raised-button-no" (click)="activeModal.close('No click')">No</button>
+      <a class="padding-class"></a>
+      <button mat-raised-button class="mat-raised-button-yes" (click)="activeModal.close('Yes click')">Yes</button>
+    </span>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+@import "../../../assets/scss/variables";
+
+.multi_lines_text {
+  white-space: pre-line;
+}
+
+.bullet-space {
+  padding-right: 10px !important;
+}
+
+.modal-header {
+  background: #8f8f8f !important;
+  font-family: open_sansbold !important;
+  font-size: $font-lg !important;
+  color: $text-color-white !important;
+}
+
+.modal-title {
+  font-family: open_sansbold !important;
+  font-size: $font-lg !important;
+  color: $text-color-white !important;
+}
+
+.error-sub-header {
+  font-family: open_sansbold !important;
+  font-size: $font-lg !important;
+  color: $text-color-hdr-black !important;
+}
+
+.error-content {
+  font-family: open_sansregular !important;
+  font-size: $font-lg !important;
+  color: $text-color-hdr-black !important;
+}
+
+.mat-raised-button {
+  font-family: open_sanslight !important;
+  font-weight: bold !important;
+  color: $text-color-white !important;
+  line-height: 32px !important;
+  margin: 0px !important;
+  background: #448aff !important;
+  font-size: $font-lg !important;
+  outline: none !important;
+}
+
+.mat-raised-button-yes {
+  font-family: open_sanslight !important;
+  font-weight: bold !important;
+  color: $text-color-white !important;
+  line-height: 32px !important;
+  margin: 0px !important;
+  background: $danger !important;
+  font-size: $font-lg !important;
+  outline: none !important;
+}
+
+.mat-raised-button-no {
+  font-family: open_sanslight !important;
+  font-weight: bold !important;
+  color: $text-color-white !important;
+  line-height: 32px !important;
+  margin: 0px !important;
+  background: $success !important;
+  font-size: $font-lg !important;
+  outline: none !important;
+}
+
+.padding-class {
+  padding-right: 5px !important;
+}
+
+.error-single-msg {
+  font-family: open_sansbold !important;
+  font-size: $font-lg !important;
+  color: $text-color-hdr-black !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
