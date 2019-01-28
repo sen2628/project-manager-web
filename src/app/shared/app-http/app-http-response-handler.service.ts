@@ -21,7 +21,7 @@ export class AppHttpResponseHandler {
 
     // this.hideError(response);
     // this.hideLoader();
-    return response.json();
+    return response.text() ? response.json() : {};;
   }
 
   public downloadonSuccess(response: any) {

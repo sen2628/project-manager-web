@@ -1,6 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ViewUsers } from '../project-manager-models/project_manager_user.model';
 import { Sort } from '@angular/material';
+import { ProjectUserService } from '../project-manager-service/project-manager-user.service';
+import { ProjectManagerDisplayComponent } from '../app-project-manager-modal/app-project-manager-modal.component';
+import { AddUser } from '../project-manager-models/project_manager_add_user.model';
 
 
 const tempResults: ViewUsers[] = [
@@ -16,11 +19,12 @@ const tempResults: ViewUsers[] = [
 })
 export class AppProjectManagerMaintainUserComponent implements OnInit {
 
-  componentTitle: string = 'Maintain User';
   addUpdateButton: string = "Add User";
   newUpdateFirstName: string = null;
   newUpdateLastName: string = null;
   newUpdateEmployeeId: number = null;
+  isEditFlag: boolean;
+  isEditUserId: number;
 
   resultUsersList: ViewUsers[] = [];
   resultUsersListSortedData: ViewUsers[] = [];
@@ -28,25 +32,133 @@ export class AppProjectManagerMaintainUserComponent implements OnInit {
 
   sortByColumn: string = null;
 
-  constructor() {
+  private _searchTerm: string;
 
-    this.setUserListData();
-    this.resultUsersListSortedData = this.resultUsersList.slice();
+  // We are binding to this property in the view template, so this
+  // getter is called when the binding needs to read the value
+  get searchTerm(): string {
+    return this._searchTerm;
+  }
 
+  // This setter is called every time the value in the search text box changes
+  set searchTerm(value: string) {
+    this._searchTerm = value;
+    this.resultUsersListSortedData = this.filterUsers(value);
+  }
+
+
+  filterUsers(searchString: string) {
+    //   console.log(searchString);
+    return this.resultUsersList.filter(userResult =>
+      (userResult.firstName.toLowerCase().indexOf(searchString.toLowerCase()) !== -1) ||
+      (userResult.lastName.toLowerCase().indexOf(searchString.toLowerCase()) !== -1));
+  }
+
+  constructor(private prjUserService: ProjectUserService, private prjModalService: ProjectManagerDisplayComponent) {
+    this.getUserListData();
   }
 
   ngOnInit() {
+  }
+
+  getUserListData() {
+
+    this.prjUserService.getAllUsers().subscribe((data: any) => {
+      this.resultUsersList = data;
+      //    console.log(JSON.stringify(this.resultUsersList));
+      this.prepareDataForSort();
+    });
+  }
+
+  prepareDataForSort() {
+
+    this.resultUsersListSortedData = this.resultUsersList.slice();
+
 
   }
 
-  setUserListData() {
-    this.resultUsersList = tempResults;
+  deleteProjectUserFromDatabase(deleteUserId: number) {
+
+    this.prjUserService.deleteUserFromDatabase(deleteUserId).subscribe((data: any) => {
+      this.prjModalService.modelOpen('Deleted', 'Selected user has been deleted', '', [], true, '', false, false);
+      this.getUserListData();
+    })
+
+  }
+
+  addUpdateUser() {
+
+    if (this.isEditFlag) { // edit user details
+
+      let userDetail = new ViewUsers();
+      userDetail.userId = this.isEditUserId
+      userDetail.firstName = this.newUpdateFirstName;
+      userDetail.lastName = this.newUpdateLastName;
+      userDetail.employeeId = this.newUpdateEmployeeId;
+      this.prjUserService.updateUserToDatabase(this.isEditUserId, userDetail).subscribe((data: any) => {
+        this.prjModalService.modelOpen('Updated', 'User has been updated', '', [], true, '', false, false);
+        this.addUpdateButton = "Add User";
+        this.resetUserDetails();
+        this.getUserListData();
+      })
+
+    } else { // add user details.
+
+      if ((this.newUpdateFirstName !== null) && (this.newUpdateFirstName.trim().length !== 0) &&
+        (this.newUpdateLastName !== null) && (this.newUpdateLastName.trim().length !== 0) &&
+        (this.newUpdateEmployeeId !== null) && (this.newUpdateEmployeeId.toString().trim().length !== 0)) {
+
+        if (!this.resultUsersList.find(usrAdd => usrAdd.employeeId === this.newUpdateEmployeeId)) {
+
+          let addUserDetail = new AddUser();
+          addUserDetail.firstName = this.newUpdateFirstName;
+          addUserDetail.lastName = this.newUpdateLastName;
+          addUserDetail.employeeId = this.newUpdateEmployeeId;
+
+          this.prjUserService.addUserToDatabase(addUserDetail).subscribe((data: any) => {
+            this.prjModalService.modelOpen('Added', 'New User Saved to System', '', [], true, '', false, false);
+            this.resetUserDetails();
+            this.getUserListData();
+          })
+
+        } else {
+          this.prjModalService.modelOpen('Validation', 'Employee Id Already Exists in the system', '', [], true, '', false, false);
+        }
+
+
+      } else {
+        this.prjModalService.modelOpen('Validation', 'Please Enter Mandatory Fields to Add User', '', [], true, '', false, false);
+      }
+
+    }
+  }
+
+  setEditUserData(firstName: string, lastName: string, empId: number, userId: number) {
+
+    this.isEditFlag = true;
+    this.newUpdateFirstName = firstName;
+    this.newUpdateLastName = lastName;
+    this.newUpdateEmployeeId = empId;
+    this.isEditUserId = userId;
+    this.addUpdateButton = "Update User";
+  }
+
+  resetUserDetails() {
+
+    this.isEditFlag = false;
+    this.addUpdateButton = 'Add User';
+    this.newUpdateEmployeeId = null;
+    this.newUpdateLastName = null;
+    this.newUpdateFirstName = null;
+    this.isEditUserId = null;
+    this._searchTerm = null;
+    this.getUserListData();
+    this.addUpdateButton = "Add User";
+
   }
 
   sortProjectListView(sortByString: string) {
-
     this.sortByColumn = sortByString;
-
   }
 
   sortData(sort: Sort) {

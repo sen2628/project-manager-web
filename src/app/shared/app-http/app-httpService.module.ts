@@ -4,19 +4,21 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule, RequestOptions, XHRBackend, Http } from '@angular/http';
 
-import { AppHttpService } from './app-http.service';
 import { AppHttpResponseHandler } from './app-http-response-handler.service';
+import { AppHttpService } from './app-http.service';
+
 import { Observable } from 'rxjs';
 
 @NgModule({
-  imports: [CommonModule, HttpModule],
+  imports: [CommonModule, HttpModule, HttpClientModule],
   exports: [Observable]
 })
 export class AppHttpServiceModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: AppHttpServiceModule,
-      providers: [AppHttpService, AppHttpResponseHandler]
+      providers: [AppHttpResponseHandler,
+        AppHttpService]
     };
   }
 }

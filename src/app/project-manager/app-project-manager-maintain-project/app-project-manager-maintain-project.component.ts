@@ -52,7 +52,7 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
 
 
   filterProjects(searchString: string) {
-    console.log(searchString);
+    //  console.log(searchString);
     return this.resultProjectList.filter(projectResult =>
       projectResult.projectName.toLowerCase().indexOf(searchString.toLowerCase()) !== -1);
   }

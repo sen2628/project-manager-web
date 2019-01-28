@@ -1,92 +1,88 @@
-<form>
-    <div class="d-flex dFlex-left-wrap">
-        <div class="d-flex flex-column bd-highlight mb-3">
-            <div class="table-responsive">
-                <table class="table-sm table-borderless">
-                    <tr>
-                        <td class="td-align-right"><label class="label-header-font">First Name:</label></td>
-                        <td class="td-align-right"><input class="form-control" type="text" [(ngModel)]="newUpdateFirstName"
-                                [ngModelOptions]="{standalone:true}" style="width: 300px"></td>
-                    </tr>
+<div class="d-flex dFlex-left-wrap">
+    <div class="d-flex flex-column bd-highlight mb-3">
+        <div class="table-responsive">
+            <table class="table-sm table-borderless">
+                <tr>
+                    <td class="td-align-right"><label class="label-header-font">First Name:</label></td>
+                    <td class="td-align-right"><input class="form-control" type="text" [(ngModel)]="newUpdateFirstName"
+                            [ngModelOptions]="{standalone:true}" style="width: 300px"></td>
+                </tr>
 
-                    <tr>
-                        <td class="td-align-right"><label class="label-header-font">Last Name:</label></td>
-                        <td class="td-align-right"><input class="form-control" type="text" [(ngModel)]="newUpdateLastName"
-                                [ngModelOptions]="{standalone:true}" style="width: 300px"></td>
-                    </tr>
+                <tr>
+                    <td class="td-align-right"><label class="label-header-font">Last Name:</label></td>
+                    <td class="td-align-right"><input class="form-control" type="text" [(ngModel)]="newUpdateLastName"
+                            [ngModelOptions]="{standalone:true}" style="width: 300px"></td>
+                </tr>
 
-                    <tr>
-                        <td class="td-align-right"><label class="label-header-font">Employee ID:</label></td>
-                        <td class="td-align-right"><input class="form-control" type="text" [(ngModel)]="newUpdateEmployeeId"
-                                [ngModelOptions]="{standalone:true}" style="width: 300px"></td>
-                    </tr>
+                <tr>
+                    <td class="td-align-right"><label class="label-header-font">Employee ID:</label></td>
+                    <td class="td-align-right"><input class="form-control" type="text" [(ngModel)]="newUpdateEmployeeId"
+                            [ngModelOptions]="{standalone:true}" [disabled]="isEditFlag" style="width: 300px"></td>
+                </tr>
 
-                    <tr>
-                        <td></td>
-                        <td class="td-align-right">
-                            <button mat-raised-button class="mat-button-row">Add</button>
-                            <span class="button-padding-right"></span>
-                            <button mat-raised-button class="mat-button-row">Reset </button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+                <tr>
+                    <td></td>
+                    <td class="td-align-right">
+                        <button mat-raised-button class="mat-button-row" (click)="addUpdateUser()">{{addUpdateButton}}</button>
+                        <span class="button-padding-right"></span>
+                        <button mat-raised-button class="mat-button-row" (click)="resetUserDetails()">Reset </button>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
-    <mat-divider class="custom-divider"></mat-divider>
-    <div class="padding-10px"></div>
-    <div class="padding-10px"></div>
-    <div class="d-flex-inline dFlex-wrap" matSort (matSortChange)="sortData($event)">
-        <span class="span-padding">
-            <input class="form-control" class="inputTextFont" type="text" style="width: 300px">
-        </span>
-        <span class="span-padding">
-            <button mat-raised-button class="button-style" color="accent">Search</button>
-        </span>
-        <span class="span-padding">
-            <label class="header-label">Sort Users By:</label>
-        </span>
-        <span class="span-padding">
-            <label class="header-sort-label" [ngClass]="sortByColumn === 'firstName'? 'selected-menu-color':'regular-menu-color'"
-                mat-sort-header="firstName" (click)="sortProjectListView('firstName')">First Name</label>
-        </span>
-        <span class="span-padding">
-            <label class="header-sort-label" [ngClass]="sortByColumn === 'lastName'? 'selected-menu-color':'regular-menu-color'"
-                mat-sort-header="lastName" (click)="sortProjectListView('lastName')">Last Name</label>
-        </span>
-        <span class="span-padding">
-            <label class="header-sort-label" [ngClass]="sortByColumn === 'userId'? 'selected-menu-color':'regular-menu-color'"
-                mat-sort-header="employeeId" (click)="sortProjectListView('userId')">Id</label>
-        </span>
-    </div>
-    <div class="padding-10px"></div>
-    <div class="padding-10px"></div>
-    <mat-divider class="custom-divider"></mat-divider>
-    <div class="padding-10px"></div>
-    <div class="padding-10px"></div>
-    <div class="list-group" *ngFor="let resultUsers of resultUsersListSortedData">
-        <mat-card class="custom-card-width">
-            <div class="table-responsive">
-                <table class="table-sm table-borderless">
-                    <tr>
-                        <td class="table-custom-width custom-result">{{resultUsers.firstName}}</td>
-                        <td class="table-button-width"><button class="mat-result-button-row mat-button-row1"
-                                mat-raised-button>Edit</button></td>
-                    </tr>
-                    <tr>
-                        <td class="table-custom-width custom-result">{{resultUsers.lastName}}</td>
-                        <td class="table-button-width"><button class="mat-result-button-row mat-button-row1"
-                                mat-raised-button>Delete</button></td>
-                    </tr>
-                    <tr>
-                        <td class="table-custom-width custom-result">{{resultUsers.employeeId}}</td>
-                        <td class="table-button-width"></td>
-                    </tr>
+</div>
+<mat-divider class="custom-divider"></mat-divider>
+<div class="padding-10px"></div>
+<div class="padding-10px"></div>
+<div class="d-flex-inline dFlex-wrap" matSort (matSortChange)="sortData($event)">
+    <span class="span-padding">
+        <input class="form-control" class="inputTextFont" type="text" style="width: 300px" [(ngModel)]="searchTerm"
+            placeholder="Search By Name">
+    </span>
+    <span class="span-padding">
+        <label class="header-label">Sort Users By:</label>
+    </span>
+    <span class="span-padding">
+        <label class="header-sort-label" [ngClass]="sortByColumn === 'firstName'? 'selected-menu-color':'regular-menu-color'"
+            mat-sort-header="firstName" (click)="sortProjectListView('firstName')">First Name</label>
+    </span>
+    <span class="span-padding">
+        <label class="header-sort-label" [ngClass]="sortByColumn === 'lastName'? 'selected-menu-color':'regular-menu-color'"
+            mat-sort-header="lastName" (click)="sortProjectListView('lastName')">Last Name</label>
+    </span>
+    <span class="span-padding">
+        <label class="header-sort-label" [ngClass]="sortByColumn === 'userId'? 'selected-menu-color':'regular-menu-color'"
+            mat-sort-header="employeeId" (click)="sortProjectListView('userId')">Id</label>
+    </span>
+</div>
+<div class="padding-10px"></div>
+<div class="padding-10px"></div>
+<mat-divider class="custom-divider"></mat-divider>
+<div class="padding-10px"></div>
+<div class="padding-10px"></div>
+<div class="list-group" *ngFor="let resultUsers of resultUsersListSortedData">
+    <mat-card class="custom-card-width">
+        <div class="table-responsive">
+            <table class="table-sm table-borderless">
+                <tr>
+                    <td class="table-custom-width custom-result">{{resultUsers.firstName}}</td>
+                    <td class="table-button-width"><button class="mat-result-button-row mat-button-row1"
+                            mat-raised-button (click)="setEditUserData(resultUsers.firstName,resultUsers.lastName,resultUsers.employeeId,resultUsers.userId)">Edit</button></td>
+                </tr>
+                <tr>
+                    <td class="table-custom-width custom-result">{{resultUsers.lastName}}</td>
+                    <td class="table-button-width"><button class="mat-result-button-row mat-button-row1"
+                            mat-raised-button (click)="deleteProjectUserFromDatabase(resultUsers.userId)">Delete</button></td>
+                </tr>
+                <tr>
+                    <td class="table-custom-width custom-result">{{resultUsers.employeeId}}</td>
+                    <td class="table-button-width"></td>
+                </tr>
 
-                </table>
-            </div>
-        </mat-card>
-        <div class="padding-10px"></div>
-        <div class="padding-10px"></div>
-    </div>
-</form>
+            </table>
+        </div>
+    </mat-card>
+    <div class="padding-10px"></div>
+    <div class="padding-10px"></div>
+</div>

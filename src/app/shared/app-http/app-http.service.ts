@@ -55,8 +55,6 @@ export class AppHttpService {
 
   get(path: string, params: URLSearchParams = new URLSearchParams()): Observable<any> {
     // console.log('Before request time----:' + this.getCurrentDate());
-
-    this.showLoader();
     const timeStart: number = performance.now();
     return this.http
       .get(`${this.baseUrl}${path}`, {
@@ -73,7 +71,6 @@ export class AppHttpService {
    * @param params
    */
   put(path: string, body: Object = {}): Observable<any> {
-    this.showLoader();
 
     return this.http
       .put(`${this.baseUrl}${path}`, JSON.stringify(body), {
@@ -89,7 +86,6 @@ export class AppHttpService {
    * @param params
    */
   post(path: string, body: Object = {}): Observable<any> {
-    this.showLoader();
 
     return this.http
       .post(`${this.baseUrl}${path}`, JSON.stringify(body), {
@@ -105,7 +101,6 @@ export class AppHttpService {
    * @param params
    */
   delete(path: string, body: Object = {}): Observable<any> {
-    this.showLoader();
 
     return this.http
       .delete(`${this.baseUrl}${path}`, {
@@ -121,7 +116,6 @@ export class AppHttpService {
    * @param params
    */
   uploadFile(path: string, body: Object = {}): Observable<any> {
-    this.showLoader();
 
     return this.http
       .post(`${this.baseUrl}${path}`, body, {
@@ -136,7 +130,6 @@ export class AppHttpService {
    * @param params
    */
   downloadFile(path: string, params: URLSearchParams = new URLSearchParams()): Observable<any> {
-    this.showLoader();
 
     const options = new RequestOptions({
       search: params,
@@ -153,7 +146,6 @@ export class AppHttpService {
    * @param body
    */
   downloadFileByPost(path: string, body: Object = {}): Observable<any> {
-    this.showLoader();
     const headers = new Headers({
       'Content-Type': 'application/json'
     });
@@ -165,7 +157,4 @@ export class AppHttpService {
       .catch((err, source) => this.responseHandler.onCatch(err, source))
       .map((res: Response) => this.responseHandler.downloadonSuccess(res));
   }
-
-  private showLoader(): void { }
-  private hideLoader(): void { }
 }

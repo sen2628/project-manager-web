@@ -27,6 +27,9 @@ import { AppMaterialImportModule } from './shared/app-material/app-material.modu
 import { LayoutModule } from '@angular/cdk/layout';
 import { APP_BASE_HREF } from "@angular/common";
 
+import { AppHttpResponseHandler } from './shared/app-http/app-http-response-handler.service';
+import { AppHttpService } from './shared/app-http/app-http.service';
+import { HttpModule } from '@angular/http';
 
 
 @NgModule({
@@ -40,6 +43,7 @@ import { APP_BASE_HREF } from "@angular/common";
     FlexLayoutModule,
     FormsModule,
     HttpClientModule,
+    HttpModule,
     ReactiveFormsModule,
     AppRoutingModule,
     AppMaterialImportModule,
@@ -49,7 +53,9 @@ import { APP_BASE_HREF } from "@angular/common";
   providers: [{
     provide: APP_BASE_HREF,
     useValue: "/"
-  }
+  },
+    AppHttpResponseHandler,
+    AppHttpService
   ],
   bootstrap: [AppComponent]
 })

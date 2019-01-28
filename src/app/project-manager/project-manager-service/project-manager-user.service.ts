@@ -13,8 +13,6 @@ export class ProjectUserService {
 
   private baseUrl = 'http://localhost:8080/user';
 
-
-
   constructor(
     private projectUserHttpService: AppHttpService,
     private projectModalService: ProjectManagerDisplayComponent
@@ -24,15 +22,10 @@ export class ProjectUserService {
     return this.projectUserHttpService
       .get(`${this.baseUrl}/`)
       .map((data) => {
-        if (data.result == 'SUCCESS') {
-          return data;
-        } else {
-          this.projectModalService.modelOpen('Service Error', '', 'Unable retrieve user details from service. Please try again later', [], true, '', false, true);
-        }
+        return data;
       })
       .catch((err) => {
-        this.projectModalService.modelOpen('Service Error', '', 'Unable to Retrieve User Details. Please try again, If issues exists contact support team', [], true, '', false, true);
-
+        this.projectModalService.modelOpen('Service Error', 'Unable to Retrieve User Details. Please try again, If issues exists contact support team', '', [], true, '', false, false);
         return Observable.throw(err);
       });
   }
@@ -52,6 +45,7 @@ export class ProjectUserService {
 
   updateUserToDatabase(updateUserId: number, data: any): Observable<any> {
     return this.projectUserHttpService.put(`${this.baseUrl}/update/` + updateUserId, data).map((data) => {
+      console.log(JSON.stringify(data));
       return data;
     });
   }
