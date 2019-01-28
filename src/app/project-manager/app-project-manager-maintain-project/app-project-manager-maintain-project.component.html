@@ -17,14 +17,14 @@
         <tr>
           <td>
             <mat-form-field>
-              <input matInput [matDatepicker]="picker" placeholder="Start Date">
+              <input matInput [matDatepicker]="picker" placeholder="Start Date" [(ngModel)]="newProjectStartDate">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
           </td>
           <td>
             <mat-form-field>
-              <input matInput [matDatepicker]="picker1" placeholder="End Date">
+              <input matInput [matDatepicker]="picker1" placeholder="End Date" [(ngModel)]="newProjectEndDate">
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
@@ -63,36 +63,29 @@
       <div class="padding-10px"></div>
     </div>
   </div>
-  <div class="d-flex-inline dFlex-wrap">
+  <div class="d-flex-inline dFlex-wrap" matSort (matSortChange)="sortData($event)">
     <span class="span-padding">
-      <input class="form-control" class="inputTextFont" type="text" style="width: 300px" [(ngModel)]="searchTerm" />
+      <input class="form-control" class="inputTextFont" type="text" style="width: 300px" placeholder="Search By Project Name"
+        [(ngModel)]="searchTerm" />
     </span>
     <span class="span-padding">
       <label class="header-label">Sort Task By:</label>
     </span>
     <span class="span-padding">
-      <label class="header-sort-label" [ngClass]="sortByColumn === 'startDate'? 'selected-menu-color':'regular-menu-color'"
-        (click)="sortProjectListView('startDate')">Start Date</label>
-      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'startDate'">arrow_upward</mat-icon>
-      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'startDate'">arrow_downward</mat-icon>
+      <label class="header-sort-label" [ngClass]="sortByColumn === 'projectStartDate'? 'selected-menu-color':'regular-menu-color'"
+        mat-sort-header="projectStartDate" (click)="sortProjectListView('projectStartDate')">Start Date</label>
     </span>
     <span class="span-padding">
-      <label class="header-sort-label" [ngClass]="sortByColumn === 'endDate'? 'selected-menu-color':'regular-menu-color'"
-        (click)="sortProjectListView('endDate')">End Date</label>
-      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'endDate'">arrow_upward</mat-icon>
-      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'endDate'">arrow_downward</mat-icon>
+      <label class="header-sort-label" [ngClass]="sortByColumn === 'projectEndDate'? 'selected-menu-color':'regular-menu-color'"
+        mat-sort-header="projectEndDate" (click)="sortProjectListView('projectEndDate')">End Date</label>
     </span>
     <span class="span-padding">
       <label class="header-sort-label" [ngClass]="sortByColumn === 'priority'? 'selected-menu-color':'regular-menu-color'"
-        (click)="sortProjectListView('priority')">Priority</label>
-      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'priority'">arrow_upward</mat-icon>
-      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'priority'">arrow_downward</mat-icon>
+        mat-sort-header="priority" (click)="sortProjectListView('priority')">Priority</label>
     </span>
     <span class="span-padding">
-      <label class="header-sort-label" [ngClass]="sortByColumn === 'completed'? 'selected-menu-color':'regular-menu-color'"
-        (click)="sortProjectListView('completed')">Completed</label>
-      <mat-icon *ngIf="sortAscDscFlag && sortByColumn === 'completed'">arrow_upward</mat-icon>
-      <mat-icon *ngIf="!sortAscDscFlag && sortByColumn === 'completed'">arrow_downward</mat-icon>
+      <label class="header-sort-label" [ngClass]="sortByColumn === 'Completed'? 'selected-menu-color':'regular-menu-color'"
+        mat-sort-header="Completed" (click)="sortProjectListView('Completed')">Completed</label>
     </span>
   </div>
   <div class="padding-10px"></div>
@@ -100,7 +93,7 @@
   <mat-divider class="custom-divider"></mat-divider>
   <div class="padding-10px"></div>
   <div class="padding-10px"></div>
-  <div class="list-group" *ngFor="let resultProjects of filterResultProjectList">
+  <div class="list-group" *ngFor="let resultProjects of resultProjectListSortedData">
     <mat-card class="custom-card-width">
 
       <mat-grid-list cols="5">
@@ -108,24 +101,25 @@
           <div class="table-responsive">
             <table class="table-sm table-borderless zero-padding">
               <tr>
-                <td colspan=1 class="zero-padding td-align-right">
-                  <label class="label-header-font">Project:</label>
+                <td colspan=1 class="zero-padding td-align-right td-align-vertical">
+                  <label class="label-header-font td-align-vertical">Project:</label>
                 </td>
-                <td colspan=3 class="zero-padding label-regular-font">
-                  {{resultProjects.projectName}}
+                <td colspan=3 class="zero-padding label-regular-font td-align-vertical">
+                  <label class="label-regular-font"> {{resultProjects.projectName}} </label>
                 </td>
               </tr>
               <tr>
-                <td class="zero-padding td-align-right"><label class="label-header-font">No Of Tasks:</label></td>
-                <td class="zero-padding label-regular-font">{{resultProjects.totalTasks}}</td>
-                <td class="zero-padding td-align-right"><label class="label-header-font">Completed:</label></td>
-                <td class="zero-padding label-regular-font">{{resultProjects.completeTasks}}</td>
+                <td class="zero-padding-right td-align-right td-align-vertical"><label class="label-header-font">No Of
+                    Tasks:</label></td>
+                <td class="zero-padding label-regular-font td-align-vertical"><label class="label-regular-font">{{resultProjects.totalTasks}}</label></td>
+                <td class="zero-padding-right td-align-right td-align-vertical"><label class="label-header-font">Completed:</label></td>
+                <td class="zero-padding label-regular-font td-align-vertical"><label class="label-regular-font">{{resultProjects.completeTasks}}</label></td>
               </tr>
               <tr>
-                <td class="zero-padding td-align-right"><label class="label-header-font">Start Date:</label></td>
-                <td class="zero-padding label-regular-font">{{resultProjects.projectStartDate}}</td>
-                <td class="zero-padding td-align-right"><label class="label-header-font">End Date:</label></td>
-                <td class="zero-padding label-regular-font">{{resultProjects.projectEndDate}}</td>
+                <td class="zero-padding td-align-right td-align-vertical"><label class="label-header-font">Start Date:</label></td>
+                <td class="zero-padding label-regular-font td-align-vertical"><label class="label-regular-font">{{resultProjects.projectStartDate}}</label></td>
+                <td class="zero-padding td-align-right td-align-vertical"><label class="label-header-font">End Date:</label></td>
+                <td class="zero-padding label-regular-font td-align-vertical"><label class="label-regular-font">{{resultProjects.projectEndDate}}</label></td>
               </tr>
             </table>
           </div>
@@ -151,12 +145,12 @@
             <table class="table-sm table-borderless zero-padding">
               <tr>
                 <td class="zero-padding  td-align-center">
-                  <button mat-raised-button class="mat-button-row2" (click)="setProjectDetailsForUpdate()">Update</button>
+                  <button mat-raised-button class="mat-button-row2" (click)="setProjectDetailsForUpdate()" [hidden]="resultProjects.status === 'Completed' || resultProjects.status === 'Suspended'">Update</button>
                 </td>
               </tr>
               <tr>
                 <td class="zero-padding  td-align-center">
-                  <button mat-raised-button class="mat-button-row2" (click)="updateAddProjectToDatabase()">Suspend</button>
+                  <button mat-raised-button class="mat-button-row2" (click)="updateAddProjectToDatabase()" [hidden]="resultProjects.status === 'Completed' || resultProjects.status === 'Suspended'">Suspend</button>
                 </td>
               </tr>
             </table>

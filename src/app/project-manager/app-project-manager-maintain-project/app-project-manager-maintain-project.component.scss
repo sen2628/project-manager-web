@@ -59,6 +59,16 @@
   vertical-align: middle !important;
 }
 
+.zero-padding-right {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  align-items: flex-start !important;
+  align-content: flex-start !important;
+  vertical-align: middle !important;
+}
+
 .td-align-right {
   align-items: flex-end !important;
   align-content: flex-end !important;
@@ -102,4 +112,8 @@
 
 .mat-slider-wrapper {
   background-color: black !important;
+}
+
+.td-align-vertical {
+  vertical-align: middle !important;
 }

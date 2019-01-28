@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewProjectTasks } from '../project-manager-models/project_manager_view_project_tasks.model'
+import { Sort } from '@angular/material';
+import { ProjectService } from '../project-manager-service/project-manager-project.service';
+import { ProjectManagerDisplayComponent } from '../app-project-manager-modal/app-project-manager-modal.component';
 
 const tempProjectResult: ViewProjectTasks[] = [
   { "projectId": 1000, "projectName": "FSD Program", "projectStartDate": "01-01-2019", "projectEndDate": "01-31-2019", "priority": 0, "status": "Completed", "userId": 100, "completeTasks": 3, "totalTasks": 3 },
@@ -27,6 +30,10 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
   sortAscDscFlag: boolean;
   resultProjectList: ViewProjectTasks[] = [];
   filterResultProjectList: ViewProjectTasks[] = [];
+  resultProjectListSortedData: ViewProjectTasks[] = [];
+  newProjectStartDate: string;
+  newProjectEndDate: string;
+
 
   dynamicGrid: Tile[] = [
     { text: 'One', cols: 3, rows: 1, color: 'lightblue' },
@@ -44,10 +51,10 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
     return this._searchTerm;
   }
 
-  // This setter is called everytime the value in the search text box changes
+  // This setter is called every time the value in the search text box changes
   set searchTerm(value: string) {
     this._searchTerm = value;
-    this.filterResultProjectList = this.filterProjects(value);
+    this.resultProjectListSortedData = this.filterProjects(value);
   }
 
 
@@ -58,15 +65,54 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
   }
 
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private prjApiService: ProjectService,
+    private prjModalService: ProjectManagerDisplayComponent) {
     this.projectStepperValue = 0;
-    this.resultProjectList = tempProjectResult;
-    this.filterResultProjectList = this.resultProjectList;
+    this.setNewProjectDates();
+    this.getAllProjectDetailsFromDatabase();
   }
 
+  ngOnInit() {
 
+  }
+
+  setNewProjectDates() {
+
+    let setStartDate = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
+    console.log(setStartDate);
+  }
+
+  getAllProjectDetailsFromDatabase() {
+
+    this.prjApiService.getAllProjects().subscribe((data: any) => {
+
+      this.resultProjectList = data;
+      this.updateResultColumn();
+      this.prepareDataForSort();
+
+    })
+
+  }
+
+  updateResultColumn() {
+
+    if (this.resultProjectList !== null && this.resultProjectList !== undefined) {
+
+      this.resultProjectList.forEach(prjList => {
+        if (prjList.totalTasks === prjList.completeTasks && prjList.completeTasks !== 0) {
+          prjList.status = 'Completed';
+        } else if (prjList.projectStartDate === prjList.projectEndDate) {
+          prjList.status = 'Suspended';
+        }
+      })
+    }
+
+  }
+
+  prepareDataForSort() {
+    this.resultProjectListSortedData = this.resultProjectList.slice();
+
+  }
   updateAddProjectToDatabase() {
 
   }
@@ -85,18 +131,32 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
   }
 
   sortProjectListView(sortByString: string) {
-
     this.sortByColumn = sortByString;
-
-    if (this.sortAscDscFlag) {
-      this.sortAscDscFlag = false;
-    } else {
-      this.sortAscDscFlag = true;
-    }
-
   }
 
+  sortData(sort: Sort) {
+    const data = this.resultProjectList.slice();
+    if (!sort.active || sort.direction === '') {
+      this.resultProjectListSortedData = data;
+      return;
+    }
 
-
+    this.resultProjectListSortedData =
+      data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        switch (sort.active) {
+          case 'projectStartDate': return compare(a.projectStartDate, b.projectStartDate, isAsc);
+          case 'projectEndDate': return compare(a.projectEndDate, b.projectEndDate, isAsc);
+          case 'priority': return compare(a.priority, b.priority, isAsc);
+          case 'status': return compare(a.status, b.status, isAsc);
+          default: return 0;
+        }
+      });
+  }
 
 }
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+}
+

@@ -45,7 +45,6 @@ export class ProjectUserService {
 
   updateUserToDatabase(updateUserId: number, data: any): Observable<any> {
     return this.projectUserHttpService.put(`${this.baseUrl}/update/` + updateUserId, data).map((data) => {
-      console.log(JSON.stringify(data));
       return data;
     });
   }

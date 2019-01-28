@@ -108,7 +108,11 @@ export class AppProjectManagerMaintainUserComponent implements OnInit {
         (this.newUpdateLastName !== null) && (this.newUpdateLastName.trim().length !== 0) &&
         (this.newUpdateEmployeeId !== null) && (this.newUpdateEmployeeId.toString().trim().length !== 0)) {
 
-        if (!this.resultUsersList.find(usrAdd => usrAdd.employeeId === this.newUpdateEmployeeId)) {
+        if (this.resultUsersList.find(usrAdd => usrAdd.employeeId === this.newUpdateEmployeeId)) {
+
+          this.prjModalService.modelOpen('Validation', 'Employee Id Already Exists in the system', '', [], true, '', false, false);
+
+        } else {
 
           let addUserDetail = new AddUser();
           addUserDetail.firstName = this.newUpdateFirstName;
@@ -120,9 +124,6 @@ export class AppProjectManagerMaintainUserComponent implements OnInit {
             this.resetUserDetails();
             this.getUserListData();
           })
-
-        } else {
-          this.prjModalService.modelOpen('Validation', 'Employee Id Already Exists in the system', '', [], true, '', false, false);
         }
 
 
