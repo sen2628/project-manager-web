@@ -4,11 +4,13 @@
       <table class="table-sm table-borderless">
         <tr>
           <td class="td-align-right"><label class="label-header-font">Project:</label></td>
-          <td colspan=2><input class="form-control" type="text" /></td>
+          <td colspan=2><input class="form-control" type="text" [(ngModel)]="newProjectName" style="text-transform: uppercase"
+              [ngModelOptions]="{standalone: yes}" /></td>
         </tr>
         <tr>
           <td class="td-align-right">
-            <mat-checkbox class="label-header-font">
+            <mat-checkbox class="label-header-font" [checked]="setDefaultDate" [disabled]="isProjectStartDateEdit"
+              (change)="setProjectDefaultDate()">
               Set Start and End Date:
             </mat-checkbox>
 
@@ -17,14 +19,16 @@
         <tr>
           <td>
             <mat-form-field>
-              <input matInput [matDatepicker]="picker" placeholder="Start Date" [(ngModel)]="newProjectStartDate">
+              <input matInput [matDatepicker]="picker" placeholder="Start Date" [(ngModel)]="newProjectStartDate"
+                [disabled]="setDefaultDate || isProjectStartDateEdit">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
           </td>
           <td>
             <mat-form-field>
-              <input matInput [matDatepicker]="picker1" placeholder="End Date" [(ngModel)]="newProjectEndDate">
+              <input matInput [matDatepicker]="picker1" placeholder="End Date" [(ngModel)]="newProjectEndDate"
+                [disabled]="setDefaultDate">
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
@@ -43,14 +47,15 @@
         </tr>
         <tr>
           <td class="td-align-right"><label class="label-header-font">Manager:</label></td>
-          <td><input class="form-control" type="text" /></td>
-          <td class="td-align-right"><button mat-raised-button class="mat-button-row">Search</button></td>
+          <td><input class="form-control" type="text" [(ngModel)]="newManagerName" [ngModelOptions]="{standalone: yes}"
+              readonly="true" /></td>
+          <td class="td-align-right"><button mat-raised-button class="mat-button-row" (click)="getUsersForManagersSelection(userListModal)">Search</button></td>
         </tr>
         <tr class="padding-10px">
         </tr>
         <tr>
           <td colspan=3 class="td-align-right">
-            <button mat-raised-button class="mat-button-row1" (click)="updateAddProjectToDatabase()">Add Project</button>
+            <button mat-raised-button class="mat-button-row1" (click)="updateAddProjectToDatabase()">{{addUpdateButton}}</button>
             <span class="button-spacing"></span>
             <button mat-raised-button class="mat-button-row1" (click)="resetAddProjectDetails()">Reset</button>
           </td>
@@ -96,7 +101,7 @@
   <div class="list-group" *ngFor="let resultProjects of resultProjectListSortedData">
     <mat-card class="custom-card-width">
 
-      <mat-grid-list cols="5">
+      <mat-grid-list cols="5" [ngClass]="(resultProjects.status === 'Suspended'? 'bgcolor-suspend':'bgcolor-nocolor') || (resultProjects.status === 'Completed'? 'bgcolor-completed':'bgcolor-nocolor')">
         <mat-grid-tile colspan="3" rowspan="1">
           <div class="table-responsive">
             <table class="table-sm table-borderless zero-padding">
@@ -145,12 +150,14 @@
             <table class="table-sm table-borderless zero-padding">
               <tr>
                 <td class="zero-padding  td-align-center">
-                  <button mat-raised-button class="mat-button-row2" (click)="setProjectDetailsForUpdate()" [hidden]="resultProjects.status === 'Completed' || resultProjects.status === 'Suspended'">Update</button>
+                  <button mat-raised-button class="mat-button-row2" (click)="setProjectDetailsForUpdate(resultProjects)"
+                    [hidden]="resultProjects.status === 'Completed' || resultProjects.status === 'Suspended'">Update</button>
                 </td>
               </tr>
               <tr>
                 <td class="zero-padding  td-align-center">
-                  <button mat-raised-button class="mat-button-row2" (click)="updateAddProjectToDatabase()" [hidden]="resultProjects.status === 'Completed' || resultProjects.status === 'Suspended'">Suspend</button>
+                  <button mat-raised-button class="mat-button-row2" (click)="suspendProjectToDatabase(resultProjects)"
+                    [hidden]="resultProjects.status === 'Completed' || resultProjects.status === 'Suspended'">Suspend</button>
                 </td>
               </tr>
             </table>
@@ -162,3 +169,30 @@
     <div class="padding-10px"></div>
   </div>
 </div>
+<ng-template #userListModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Users</h4>
+  </div>
+  <div class="modal-body">
+    <div class=row><input class="form-control" class="inputTextFont" type="text" style="width: 300px" placeholder="Search By User Name"
+        [(ngModel)]="searchUserTerm" /></div>
+    <div class="table-responsive">
+      <table class="table table-borderless">
+        <tr>
+          <td class="selectionHeader">Employee Id</td>
+          <td class="selectionHeader">First Name</td>
+          <td class="selectionHeader">Last Name</td>
+        </tr>
+        <tr *ngFor="let userList of filteredUserSelectionList">
+          <td class="selectionRow row-user-click" (click)="userModelRowClick(userList); modal.close(userList.employeeId + ' click')">{{userList.employeeId}}</td>
+          <td class="selectionRow">{{userList.firstName}}</td>
+          <td class="selectionRow">{{userList.lastName}}</td>
+        </tr>
+
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button mat-raised-button class="mat-button-row" (click)="modal.close('Cancel click')">Cancel</button>
+  </div>
+</ng-template>

@@ -3,12 +3,16 @@ import { ViewProjectTasks } from '../project-manager-models/project_manager_view
 import { Sort } from '@angular/material';
 import { ProjectService } from '../project-manager-service/project-manager-project.service';
 import { ProjectManagerDisplayComponent } from '../app-project-manager-modal/app-project-manager-modal.component';
+import { ProjectUserService } from '../project-manager-service/project-manager-user.service';
+import { ViewUsers } from '../project-manager-models/project_manager_user.model';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { AddProjectTasks } from '../project-manager-models/project_manager_add_project_tasks.model';
 
-const tempProjectResult: ViewProjectTasks[] = [
+/* const tempProjectResult: ViewProjectTasks[] = [
   { "projectId": 1000, "projectName": "FSD Program", "projectStartDate": "01-01-2019", "projectEndDate": "01-31-2019", "priority": 0, "status": "Completed", "userId": 100, "completeTasks": 3, "totalTasks": 3 },
   { "projectId": 1001, "projectName": "Logistics Program", "projectStartDate": "01-01-2019", "projectEndDate": "01-31-2019", "priority": 0, "status": "Completed", "userId": 100, "completeTasks": 3, "totalTasks": 5 },
   { "projectId": 1002, "projectName": "Machine Learning Program", "projectStartDate": "01-01-2019", "projectEndDate": "01-31-2019", "priority": 0, "status": "Completed", "userId": 100, "completeTasks": 5, "totalTasks": 9 }
-]
+] */
 
 export interface Tile {
   color: string;
@@ -31,8 +35,21 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
   resultProjectList: ViewProjectTasks[] = [];
   filterResultProjectList: ViewProjectTasks[] = [];
   resultProjectListSortedData: ViewProjectTasks[] = [];
-  newProjectStartDate: string;
-  newProjectEndDate: string;
+  currentDate = new Date();
+  newProjectStartDate = new Date();
+  newProjectEndDate = new Date();
+  setDefaultDate: boolean = false;
+  userSelectionList: ViewUsers[];
+  filteredUserSelectionList: ViewUsers[];
+  newUserDetails: ViewUsers;
+  newManagerName: string;
+  newProjectName: string;
+  addUpdateButton: string = "Add Task";
+  isEditFlag: boolean;
+  isSuspendFlag: boolean;
+  newProjectDetails: AddProjectTasks;
+  isProjectStartDateEdit: boolean;
+  updateProjectDetails: ViewProjectTasks;
 
 
   dynamicGrid: Tile[] = [
@@ -42,6 +59,29 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
     { text: 'Three', cols: 3, rows: 1, color: 'lightpink' },
     { text: 'Three', cols: 3, rows: 1, color: 'lightpink' },
   ];
+
+  private _searchUserTerm: string;
+
+  // We are binding to this property in the view template, so this
+  // getter is called when the binding needs to read the value
+  get searchUserTerm(): string {
+    return this._searchUserTerm;
+  }
+
+  // This setter is called every time the value in the search text box changes
+  set searchUserTerm(value: string) {
+    this._searchUserTerm = value;
+    this.filteredUserSelectionList = this.filterUsers(value);
+  }
+
+
+  filterUsers(searchString: string) {
+    //  console.log(searchString);
+    return this.userSelectionList.filter(prjUser =>
+      (prjUser.firstName.toLowerCase().indexOf(searchString.toLowerCase()) !== -1) ||
+      (prjUser.lastName.toLowerCase().indexOf(searchString.toLowerCase()) !== -1));
+  }
+
 
   private _searchTerm: string;
 
@@ -66,10 +106,13 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
 
 
   constructor(private prjApiService: ProjectService,
-    private prjModalService: ProjectManagerDisplayComponent) {
+    private prjModalService: ProjectManagerDisplayComponent,
+    private selectionModalService: NgbModal,
+    private prjUserService: ProjectUserService) {
     this.projectStepperValue = 0;
     this.setNewProjectDates();
     this.getAllProjectDetailsFromDatabase();
+    this.getUserFromDatabase();
   }
 
   ngOnInit() {
@@ -77,10 +120,34 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
   }
 
   setNewProjectDates() {
-
-    let setStartDate = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
-    console.log(setStartDate);
+    this.setDefaultDate = true;
+    this.newProjectStartDate = new Date();
+    this.newProjectEndDate = new Date();
+    this.newProjectEndDate.setDate(this.newProjectEndDate.getDate() + 1);
+    this.newProjectStartDate.setDate(this.newProjectStartDate.getDate());
   }
+
+  setProjectDefaultDate() {
+    if (this.setDefaultDate) {
+      this.setDefaultDate = false;
+    } else {
+      this.setDefaultDate = true;
+      this.setNewProjectDates();
+    }
+  }
+
+  getUsersForManagersSelection(content) {
+
+    if (this.userSelectionList !== null && this.userSelectionList !== undefined && this.userSelectionList.length !== 0) {
+
+      this.selectionModalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+
+    } else {
+      this.prjModalService.modelOpen('Error', 'No Available Users to Make Selection', '', [], true, '', false, false);
+    }
+
+  }
+
 
   getAllProjectDetailsFromDatabase() {
 
@@ -91,6 +158,20 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
       this.prepareDataForSort();
 
     })
+
+  }
+
+  getUserFromDatabase() {
+    this.prjUserService.getAllUsers().subscribe((data) => {
+      this.userSelectionList = data;
+      this.filteredUserSelectionList = this.userSelectionList;
+    });
+  }
+
+  userModelRowClick(userDetails: ViewUsers) {
+
+    this.newUserDetails = userDetails;
+    this.newManagerName = this.newUserDetails.firstName + ' ' + this.newUserDetails.lastName;
 
   }
 
@@ -115,18 +196,140 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
   }
   updateAddProjectToDatabase() {
 
+    if (this.newProjectName !== null && this.newProjectName !== undefined && this.newProjectName.trim().length > 0) {
+
+      if (this.newProjectEndDate > this.newProjectEndDate) {
+        this.prjModalService.modelOpen('Validation Error', 'Project End date should be greater than Project Start Date', '', [], true, '', false, false);
+      } else {
+
+        if (this.newManagerName !== null && this.newManagerName !== undefined && this.newManagerName.trim().length > 0) {
+
+          if (!this.isEditFlag) {
+            const newProjectAddDetails = new AddProjectTasks();
+            newProjectAddDetails.projectName = this.newProjectName.toUpperCase();
+            newProjectAddDetails.projectStartDate = this.newProjectStartDate;
+            newProjectAddDetails.projectEndDate = this.newProjectEndDate;
+            newProjectAddDetails.priority = this.projectStepperValue;
+            newProjectAddDetails.userId = this.newUserDetails.userId;
+
+            this.prjApiService.addProjectToDatabase(newProjectAddDetails).subscribe((data) => {
+              this.prjModalService.modelOpen('Success', 'New Project has been added to database.', '', [], true, '', false, false);
+              this.getAllProjectDetailsFromDatabase();
+              this.resetAddProjectDetails();
+            });
+          } else {
+
+            const modifyProjectDetails = new ViewProjectTasks();
+            modifyProjectDetails.projectId = this.updateProjectDetails.projectId;
+            modifyProjectDetails.projectName = this.newProjectName;
+            modifyProjectDetails.projectStartDate = this.updateProjectDetails.projectStartDate;
+            modifyProjectDetails.projectEndDate = this.newProjectEndDate;
+            modifyProjectDetails.priority = this.projectStepperValue;
+            if (this.newUserDetails.userId !== null && this.newUserDetails.userId !== undefined) {
+              modifyProjectDetails.userId = this.newUserDetails.userId;
+            } else {
+              modifyProjectDetails.userId = this.updateProjectDetails.userId;
+            }
+
+            modifyProjectDetails.totalTasks = this.updateProjectDetails.totalTasks;
+            modifyProjectDetails.completeTasks = this.updateProjectDetails.completeTasks;
+
+            this.prjApiService.updateProjectToDatabase(modifyProjectDetails.projectId, modifyProjectDetails).subscribe((data) => {
+              this.prjModalService.modelOpen('Success', 'Project Updated.', '', [], true, '', false, false);
+              this.resetAddProjectDetails();
+              this.getAllProjectDetailsFromDatabase();
+            })
+          }
+
+
+        } else {
+          this.prjModalService.modelOpen('Validation Error', 'Please Select Manager to Add Project', '', [], true, '', false, false);
+
+        }
+      }
+
+
+    } else {
+      this.prjModalService.modelOpen('Validation Error', 'Please enter project details to add new Project.', '', [], true, '', false, false);
+    }
+
   }
 
-  updateProjectToDatabase() {
+  suspendProjectToDatabase(resultProjects: ViewProjectTasks) {
+
+    this.updateProjectDetails = resultProjects;
+    const modifyProjectDetails = new ViewProjectTasks();
+    modifyProjectDetails.projectId = this.updateProjectDetails.projectId;
+    modifyProjectDetails.projectName = this.updateProjectDetails.projectName;
+    modifyProjectDetails.projectStartDate = this.updateProjectDetails.projectStartDate;
+    modifyProjectDetails.projectEndDate = this.updateProjectDetails.projectStartDate;
+    modifyProjectDetails.priority = this.updateProjectDetails.priority;
+    if (this.updateProjectDetails.userId === undefined) {
+      modifyProjectDetails.userId = 0;
+    } else {
+      modifyProjectDetails.userId = this.updateProjectDetails.userId;
+
+    }
+    if (this.updateProjectDetails.totalTasks === undefined) {
+
+      modifyProjectDetails.totalTasks = 0;
+    } else {
+      modifyProjectDetails.totalTasks = this.updateProjectDetails.totalTasks;
+
+    }
+
+    if (this.updateProjectDetails.completeTasks === undefined) {
+
+      modifyProjectDetails.completeTasks = 0;
+
+    } else {
+
+      modifyProjectDetails.completeTasks = this.updateProjectDetails.completeTasks;
+
+    }
+
+
+
+    this.prjApiService.updateProjectToDatabase(modifyProjectDetails.projectId, modifyProjectDetails).subscribe((data) => {
+      this.prjModalService.modelOpen('Suspended', 'Project Suspended.', '', [], true, '', false, false);
+      this.resetAddProjectDetails();
+      this.getAllProjectDetailsFromDatabase();
+    })
 
   }
 
-  setProjectDetailsForUpdate() {
 
+  setProjectDetailsForUpdate(resultPrj: ViewProjectTasks) {
+    this.updateProjectDetails = resultPrj;
+    this.addUpdateButton = "Update Project";
+    this.setDefaultDate = false;
+    this.isProjectStartDateEdit = true;
+    this.newProjectName = resultPrj.projectName;
+    this.userSelectionList.forEach(usrDet => {
+      if (usrDet.userId === resultPrj.userId) {
+        this.newManagerName = usrDet.firstName + ' ' + usrDet.lastName;
+      }
+    });
+    this.newProjectStartDate = resultPrj.projectStartDate;
+    this.newProjectEndDate = resultPrj.projectEndDate;
+    this.projectStepperValue = resultPrj.priority;
+    this.isEditFlag = true;
   }
 
 
   resetAddProjectDetails() {
+
+    this.newManagerName = null;
+    this.setNewProjectDates();
+    this.newProjectName = null;
+    this.projectStepperValue = 0;
+    this.getAllProjectDetailsFromDatabase();
+    this.addUpdateButton = "Add Task";
+    this.isEditFlag = false;
+    this.isSuspendFlag = false;
+    this.setDefaultDate = true;
+    this.isProjectStartDateEdit = false;
+
 
   }
 
@@ -145,8 +348,8 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
       data.sort((a, b) => {
         const isAsc = sort.direction === 'asc';
         switch (sort.active) {
-          case 'projectStartDate': return compare(a.projectStartDate, b.projectStartDate, isAsc);
-          case 'projectEndDate': return compare(a.projectEndDate, b.projectEndDate, isAsc);
+          case 'projectStartDate': return compare(a.projectStartDate.toDateString(), b.projectStartDate.toDateString(), isAsc);
+          case 'projectEndDate': return compare(a.projectEndDate.toDateString(), b.projectEndDate.toDateString(), isAsc);
           case 'priority': return compare(a.priority, b.priority, isAsc);
           case 'status': return compare(a.status, b.status, isAsc);
           default: return 0;
