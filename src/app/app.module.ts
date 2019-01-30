@@ -30,6 +30,7 @@ import { APP_BASE_HREF } from "@angular/common";
 import { AppHttpResponseHandler } from './shared/app-http/app-http-response-handler.service';
 import { AppHttpService } from './shared/app-http/app-http.service';
 import { HttpModule } from '@angular/http';
+import { AppHttpServiceModule } from './shared/app-http/app-httpService.module';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { HttpModule } from '@angular/http';
     HttpModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    AppHttpServiceModule,
     AppMaterialImportModule,
     AppProjectManagerComponentImportModule,
     LayoutModule

@@ -10,8 +10,8 @@ import { AppHttpService } from './app-http.service';
 import { Observable } from 'rxjs';
 
 @NgModule({
-  imports: [CommonModule, HttpModule, HttpClientModule],
-  exports: [Observable]
+  imports: [CommonModule, HttpModule, HttpClientModule]
+  //exports: [Observable]
 })
 export class AppHttpServiceModule {
   static forRoot(): ModuleWithProviders {

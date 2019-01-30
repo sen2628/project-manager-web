@@ -4,8 +4,7 @@
       <table class="table-sm table-borderless">
         <tr>
           <td class="td-align-right"><label class="label-header-font">Project:</label></td>
-          <td colspan=2><input class="form-control" type="text" [(ngModel)]="newProjectName" style="text-transform: uppercase"
-              [ngModelOptions]="{standalone: yes}" /></td>
+          <td colspan=2><input class="form-control" type="text" [(ngModel)]="newProjectName" style="text-transform: uppercase" /></td>
         </tr>
         <tr>
           <td class="td-align-right">
@@ -41,14 +40,13 @@
           <td class="td-align-right"><label class="label-header-font">Priority:</label></td>
           <td colspan=2>
             <mat-slider class="task-slider-margin" max="30" min="0" step="1" thumbLabel=true [(ngModel)]="projectStepperValue"
-              [ngModelOptions]="{standalone: yes}" color="primary">
+              color="primary">
             </mat-slider>
           </td>
         </tr>
         <tr>
           <td class="td-align-right"><label class="label-header-font">Manager:</label></td>
-          <td><input class="form-control" type="text" [(ngModel)]="newManagerName" [ngModelOptions]="{standalone: yes}"
-              readonly="true" /></td>
+          <td><input class="form-control" type="text" [(ngModel)]="newManagerName" readonly="true" /></td>
           <td class="td-align-right"><button mat-raised-button class="mat-button-row" (click)="getUsersForManagersSelection(userListModal)">Search</button></td>
         </tr>
         <tr class="padding-10px">
