@@ -52,10 +52,11 @@ import { AppHttpServiceModule } from './shared/app-http/app-httpService.module';
     AppProjectManagerComponentImportModule,
     LayoutModule
   ],
-  providers: [{
-    provide: APP_BASE_HREF,
-    useValue: "/pmapp/"
-  },
+  providers: [
+    /*     {
+        provide: APP_BASE_HREF,
+        useValue: "/pmapp/"
+      }, */
     AppHttpResponseHandler,
     AppHttpService
   ],
