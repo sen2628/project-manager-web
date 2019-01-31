@@ -54,7 +54,7 @@ import { AppHttpServiceModule } from './shared/app-http/app-httpService.module';
   ],
   providers: [{
     provide: APP_BASE_HREF,
-    useValue: "/"
+    useValue: "/pmapp/"
   },
     AppHttpResponseHandler,
     AppHttpService
