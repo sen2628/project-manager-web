@@ -8,10 +8,10 @@
               <label class="label-header-font">Project:</label>
             </td>
             <td class="td-align-right ">
-              <input class="form-control" type="text" style="width: 300px" />
+              <input class="form-control" [(ngModel)]="newProjectName" type="text" style="width: 300px" readonly />
             </td>
             <td class="td-align-right ">
-              <button mat-raised-button class="mat-button-row">Search</button>
+              <button mat-raised-button class="mat-button-row" (click)="projectSearch(projectListModal)" [disabled]="isParentTask">Search</button>
             </td>
           </tr>
           <tr>
@@ -19,13 +19,13 @@
               <label class="label-header-font">Task:</label>
             </td>
             <td colspan=2 class="td-align-right">
-              <input class="form-control" type="text" />
+              <input class="form-control" type="text" [(ngModel)]="newTaskName" />
             </td>
           </tr>
           <tr>
             <td></td>
             <td>
-              <mat-checkbox class="checkbox-font">
+              <mat-checkbox class="checkbox-font" [disabled]="isEditTask" [checked]="isParentTask" (change)="enableDisableParentTask()">
                 Parent Task
               </mat-checkbox>
             </td>
@@ -34,7 +34,7 @@
             <td><label class="label-header-font">Priority:</label></td>
             <td>
               <mat-slider class="task-slider-margin" max="30" min="0" step="1" thumbLabel=true [(ngModel)]="projectStepperValue"
-                color="primary">
+                color="primary" [disabled]="isParentTask">
               </mat-slider>
             </td>
           </tr>
@@ -50,8 +50,10 @@
       <table class="table-sm table-borderless">
         <tr>
           <td class="td-align-right"><label class="label-header-font">Parent Task:</label></td>
-          <td class="td-align-right"><input class="form-control" type="text" /></td>
-          <td class="td-align-right" colspan=2><button mat-raised-button class="mat-button-row"> Search</button></td>
+          <td class="td-align-right"><input class="form-control" [ngModel]="newParentTask" type="text" readonly /></td>
+          <td class="td-align-right" colspan=2><button mat-raised-button class="mat-button-row" [disabled]="isParentTask"
+              (click)="parentTaskSearch(parentTaskModal)">
+              Search</button></td>
         </tr>
         <tr>
           <td class="td-align-right"><label class="label-header-font">Start Date:</label></td>
@@ -59,7 +61,8 @@
         <tr>
           <td>
             <mat-form-field>
-              <input matInput [matDatepicker]="picker" placeholder="Start Date">
+              <input matInput [matDatepicker]="picker" [(ngModel)]="taskStartDate" [disabled]="isParentTask"
+                placeholder="Start Date">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
@@ -67,7 +70,7 @@
           <td><label class="label-header-font">End Date:</label></td>
           <td class="td-align-right">
             <mat-form-field>
-              <input matInput [matDatepicker]="picker1" placeholder="End Date">
+              <input matInput [matDatepicker]="picker1" [(ngModel)]="taskEndDate" [disabled]="isParentTask" placeholder="End Date">
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
@@ -79,18 +82,95 @@
           <td class="td-align-right"><label class="label-header-font">User:</label></td>
           <td colspan=2>
         <tr>
-          <td class="td-align-right"><input class="form-control" type="text" /></td>
-          <td class="td-align-right"><button mat-raised-button class="mat-button-row">Search</button></td>
+          <td class="td-align-right"><input class="form-control" [(ngModel)]="newManagerName" type="text" readonly /></td>
+          <td class="td-align-right"><button mat-raised-button class="mat-button-row" [disabled]="isParentTask" (click)="userSearch(userListModal)">Search</button></td>
         </tr>
         </td>
         </tr>
         <tr>
-          <td class="td-align-right" colspan=4><button mat-raised-button class="mat-button-row1">Add Task</button>
+          <td class="td-align-right" colspan=4><button mat-raised-button class="mat-button-row1" (click)="addUpdateTask()">{{addUpdateButton}}</button>
             <span class="button-spacing"></span>
-            <button mat-raised-button class="mat-button-row1">Reset</button>
+            <button mat-raised-button class="mat-button-row1" (click)="resetAddTaskData()">Reset</button>
           </td>
         </tr>
       </table>
     </div>
   </div>
+
+  <ng-template #userListModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Users</h4>
+    </div>
+    <div class="modal-body">
+      <div class=row><input class="form-control" class="inputTextFont" type="text" style="width: 300px" placeholder="Search By User Name"
+          [(ngModel)]="searchUserTerm" /></div>
+      <div class="table-responsive">
+        <table class="table table-borderless">
+          <tr>
+            <td class="selectionHeader">Employee Id</td>
+            <td class="selectionHeader">First Name</td>
+            <td class="selectionHeader">Last Name</td>
+          </tr>
+          <tr *ngFor="let userList of filteredUserSelectionList">
+            <td class="selectionRow row-user-click" (click)="userModelRowClick(userList); modal.close(userList.employeeId + ' click')">{{userList.employeeId}}</td>
+            <td class="selectionRow">{{userList.firstName}}</td>
+            <td class="selectionRow">{{userList.lastName}}</td>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button mat-raised-button class="mat-button-row" (click)="modal.close('Cancel click')">Cancel</button>
+    </div>
+  </ng-template>
+
+
+  <ng-template #projectListModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Projects</h4>
+    </div>
+    <div class="modal-body">
+      <div class=row><input class="form-control" class="inputTextFont" type="text" style="width: 300px" placeholder="Search By Project Name"
+          [(ngModel)]="searchProjectTerm" /></div>
+      <div class="table-responsive">
+        <table class="table table-borderless">
+          <tr>
+            <td class="selectionHeader">Project Name</td>
+          </tr>
+          <tr *ngFor="let projectList of filterResultProjectList">
+            <td class="selectionRow row-user-click" (click)="projectModelRowClick(projectList); modal.close(projectList.projectName + ' click')">{{projectList.projectName}}</td>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button mat-raised-button class="mat-button-row" (click)="modal.close('Cancel click')">Cancel</button>
+    </div>
+  </ng-template>
+
+  <ng-template #parentTaskModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Parent Tasks</h4>
+    </div>
+    <div class="modal-body">
+      <div class=row><input class="form-control" class="inputTextFont" type="text" style="width: 300px" placeholder="Search By ParentTask Name"
+          [(ngModel)]="searchParentTaskTerm" /></div>
+      <div class="table-responsive">
+        <table class="table table-borderless">
+          <tr>
+            <td class="selectionHeader">Parent Task Name</td>
+          </tr>
+          <tr *ngFor="let parentTaskList of filterParentTaskList">
+            <td class="selectionRow row-user-click" (click)="parentTaskModelRowClick(parentTaskList); modal.close(parentTaskList.parentDesc  + ' click')">{{parentTaskList.parentDesc}}</td>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button mat-raised-button class="mat-button-row" (click)="modal.close('Cancel click')">Cancel</button>
+    </div>
+  </ng-template>
 </div>

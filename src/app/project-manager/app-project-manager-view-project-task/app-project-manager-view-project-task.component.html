@@ -1,4 +1,4 @@
-<form>
+<div class="form-group">
   <div class="d-flex-inline dFlex-wrap">
     <div class="table-responsive">
       <table class="table-sm table-borderless">
@@ -7,30 +7,30 @@
             <label class="header-label">Project:</label>
           </td>
           <td class="span-padding">
-            <input class="form-control inputTextFont" type="text" style="width: 300px">
+            <input class="form-control inputTextFont" [(ngModel)]="projectSearch" readonly type="text" style="width: 300px">
           </td>
           <td>
-            <button mat-raised-button class="button-style" color="accent">Search</button>
+            <button mat-raised-button class="button-style" (click)="projectSearchFunction(projectListModal)" color="accent">Search</button>
           </td>
           <td matSort (matSortChange)="sortData($event)">
             <span class="span-padding">
               <label class="header-label">Sort Task By:</label>
             </span>
             <span class="span-padding">
-              <label class="header-sort-label" [ngClass]="sortByColumn === 'startDate'? 'selected-menu-color':'regular-menu-color'"
-                mat-sort-header="taskStartDate" (click)="sortProjectListView('startDate')">Start Date</label>
+              <label class="header-sort-label" [ngClass]="sortByColumn === 'taskStartDate'? 'selected-menu-color':'regular-menu-color'"
+                mat-sort-header="taskStartDate" (click)="sortProjectListView('taskStartDate')">Start Date</label>
             </span>
             <span class="span-padding">
-              <label class="header-sort-label" [ngClass]="sortByColumn === 'endDate'? 'selected-menu-color':'regular-menu-color'"
-                mat-sort-header="taskEndDate" (click)="sortProjectListView('endDate')">End Date</label>
+              <label class="header-sort-label" [ngClass]="sortByColumn === 'taskEndDate'? 'selected-menu-color':'regular-menu-color'"
+                mat-sort-header="taskEndDate" (click)="sortProjectListView('taskEndDate')">End Date</label>
             </span>
             <span class="span-padding">
               <label class="header-sort-label" [ngClass]="sortByColumn === 'priority'? 'selected-menu-color':'regular-menu-color'"
                 mat-sort-header="priority" (click)="sortProjectListView('priority')">Priority</label>
             </span>
             <span class="span-padding">
-              <label class="header-sort-label" [ngClass]="sortByColumn === 'completed'? 'selected-menu-color':'regular-menu-color'"
-                mat-sort-header="taskStatus" (click)="sortProjectListView('completed')">Completed</label>
+              <label class="header-sort-label" [ngClass]="sortByColumn === 'taskStatus'? 'selected-menu-color':'regular-menu-color'"
+                mat-sort-header="taskStatus" (click)="sortProjectListView('taskStatus')">Completed</label>
             </span>
           </td>
         </tr>
@@ -55,24 +55,51 @@
             <th class="table-cols6 table-result-header"></th>
           </tr>
           <tr>
-            <td class="table-cols1 table-result-data">{{projTaskRows.taskDesc}}</td>
+            <td class="table-cols1 table-result-data">{{projTaskRows.taskName}}</td>
             <td class="table-cols2 table-result-data">{{projTaskRows.parentDesc}}</td>
             <td class="table-cols3 table-result-data">{{projTaskRows.priority}}</td>
             <td class="table-cols4 table-result-data">{{projTaskRows.taskStartDate}}</td>
             <td class="table-cols5 table-result-data">{{projTaskRows.taskEndDate}}</td>
-            <td class="table-cols6 table-result-data" *ngIf="projTaskRows.taskStatus !== 'Completed'"><span class="button-spacing"><button
-                  mat-raised-button class="mat-button-row1" (click)="editProjectTasks(projTaskRows.taskId)">Edit</button></span>
-              <span class="button-spacing"><button mat-raised-button class="mat-button-row1" (click)="endProjectTasks(projTaskRows.taskId)">End
+            <td class="table-cols6 table-result-data" *ngIf="projTaskRows.taskStatus !== 'Completed' && projTaskRows.taskStatus !== 'Suspended'">
+              <span class="button-spacing">
+                <button mat-raised-button class="mat-button-row1" (click)="editProjectTasks(projTaskRows.taskId)">Edit</button></span>
+              <span class="button-spacing"><button mat-raised-button class="mat-button-row1" (click)="endProjectTasks(projTaskRows)">End
                   Task</button></span>
             </td>
             <td class="table-cols6 table-result-data" *ngIf="projTaskRows.taskStatus === 'Completed'">
               <label class="label--completed-padding" style="background-color: aquamarine">Completed</label></td>
+            <td class="table-cols6 table-result-data" *ngIf="projTaskRows.taskStatus === 'Suspended'">
+              <label class="label--completed-padding" style="background-color: lightsalmon">Suspended</label></td>
           </tr>
         </table>
       </mat-card>
-      <div class="
-                padding-10px">
+      <div class="padding-10px">
       </div>
     </div>
   </div>
-</form>
+
+  <ng-template #projectListModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Projects</h4>
+    </div>
+    <div class="modal-body">
+      <div class=row><input class="form-control" class="inputTextFont" type="text" style="width: 300px" placeholder="Search By Project Name"
+          [(ngModel)]="searchProjectTerm" /></div>
+      <div class="table-responsive">
+        <table class="table table-borderless">
+          <tr>
+            <td class="selectionHeader">Project Name</td>
+          </tr>
+          <tr *ngFor="let projectList of filterResultProjectList">
+            <td class="selectionRow row-user-click" (click)="projectModelRowClick(projectList); modal.close(projectList.projectName + ' click')">{{projectList.projectName}}</td>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button mat-raised-button class="mat-button-row" (click)="modal.close('Cancel click')">Cancel</button>
+    </div>
+  </ng-template>
+
+</div>

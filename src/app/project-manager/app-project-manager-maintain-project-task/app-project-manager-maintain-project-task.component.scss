@@ -82,3 +82,30 @@
 .mat-slider-wrapper {
   background-color: black !important;
 }
+
+.selectionHeader {
+  font-family: open_sansbold !important;
+  font-size: $font-md !important;
+}
+
+.selectionRow {
+  font-family: open_sansbold !important;
+  font-size: $font-md !important;
+}
+
+.row-user-click {
+  cursor: pointer !important;
+  color: $font-blue !important;
+}
+
+.bgcolor-suspend {
+  background-color: lightcoral !important;
+}
+
+.bgcolor-completed {
+  background-color: lightgreen !important;
+}
+
+.bgcolor-nocolor {
+  background-color: white !important;
+}

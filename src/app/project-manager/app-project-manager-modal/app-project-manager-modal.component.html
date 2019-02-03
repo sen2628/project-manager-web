@@ -18,9 +18,9 @@
   </div>
   <div *ngIf="isConfirmation">
     <span>
-      <button mat-raised-button class="mat-raised-button-no" (click)="activeModal.close('No click')">No</button>
+      <button mat-raised-button class="mat-raised-button-no" (click)="checkYesNo(false); activeModal.close('No click')">No</button>
       <a class="padding-class"></a>
-      <button mat-raised-button class="mat-raised-button-yes" (click)="activeModal.close('Yes click')">Yes</button>
+      <button mat-raised-button class="mat-raised-button-yes" (click)="checkYesNo(true); activeModal.close('Yes click')">Yes</button>
     </span>
   </div>
 </div>

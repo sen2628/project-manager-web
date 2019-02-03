@@ -5,8 +5,7 @@
   <mat-toolbar>
     <span class="app-menu-first-spacing" (click)="loadMenuComponent('project')" [ngClass]="selectedMenuLink === 'project'? 'selected-menu-color':'regular-menu-color'">Add
       Project</span>
-    <span class="app-menu-spacing" (click)="loadMenuComponent('task')" [ngClass]="selectedMenuLink === 'task'? 'selected-menu-color':'regular-menu-color'">Add
-      Task</span>
+    <span class="app-menu-spacing" (click)="loadMenuComponent('task')" [ngClass]="selectedMenuLink === 'task'? 'selected-menu-color':'regular-menu-color'">{{menuLink}}</span>
     <span class="app-menu-spacing" (click)="loadMenuComponent('user')" [ngClass]="selectedMenuLink === 'user'? 'selected-menu-color':'regular-menu-color'">Add
       User</span>
     <span class="app-menu-spacing" (click)="loadMenuComponent('vTask')" [ngClass]="selectedMenuLink === 'vTask'? 'selected-menu-color':'regular-menu-color'">View

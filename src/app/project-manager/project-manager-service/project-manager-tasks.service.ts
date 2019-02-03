@@ -9,7 +9,7 @@ import { ProjectManagerDisplayComponent } from '../app-project-manager-modal/app
  * and invokes Async Service with required params
  */
 @Injectable()
-export class ProjectService {
+export class TaskService {
 
   private baseUrl = 'http://localhost:8080/task';
 
@@ -18,16 +18,29 @@ export class ProjectService {
     private projectModalService: ProjectManagerDisplayComponent
   ) { }
 
-  getAllParentTasks(): Observable<any> {
+
+  getAllTasks(): Observable<any> {
     return this.projectUserHttpService
-      .get(`${this.baseUrl}/parentTasks`)
+      .get(`${this.baseUrl}/getAllTasks`)
       .map((data) => {
         return data;
       })
       .catch((err) => {
-        this.projectModalService.modelOpen('Service Error', 'Unable to Retrieve Parent Task Details. Please try again, If issues exists contact support team', '', [], true, '', false, false);
+        this.projectModalService.modelOpen('Service Error', 'Unable to Retrieve Task Details. Please try again, If issues exists contact support team', '', [], true, '', false, false);
         return Observable.throw(err);
       });
+  }
+
+  updateTaskToDatabase(data: any): Observable<any> {
+    return this.projectUserHttpService.post(`${this.baseUrl}/updateTask`, data).map((data) => {
+      return data;
+    });
+  }
+
+  addTaskToDatabase(data: any): Observable<any> {
+    return this.projectUserHttpService.post(`${this.baseUrl}/addNewTask`, data).map((data) => {
+      return data;
+    });
   }
 
   addParentTaskToDatabase(data: any): Observable<any> {
@@ -36,6 +49,17 @@ export class ProjectService {
     });
   }
 
+  getAllParentTasks(): Observable<any> {
+    return this.projectUserHttpService
+      .get(`${this.baseUrl}/getAllParentTasks`)
+      .map((data) => {
+        return data;
+      })
+      .catch((err) => {
+        this.projectModalService.modelOpen('Service Error', 'Unable to Retrieve Parent Task Details. Please try again, If issues exists contact support team', '', [], true, '', false, false);
+        return Observable.throw(err);
+      });
+  }
 
 
 }

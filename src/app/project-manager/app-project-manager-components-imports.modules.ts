@@ -13,6 +13,8 @@ import { AppProjectManagerViewProjectTaskComponent } from './app-project-manager
 import { AppProjectManagerModalComponent, ProjectManagerDisplayComponent } from './app-project-manager-modal/app-project-manager-modal.component';
 import { ProjectUserService } from './project-manager-service/project-manager-user.service';
 import { ProjectService } from './project-manager-service/project-manager-project.service';
+import { DataSharedService } from './project-manager-service/project-manager-data-exchange.service';
+import { TaskService } from './project-manager-service/project-manager-tasks.service';
 
 
 @NgModule({
@@ -23,7 +25,7 @@ import { ProjectService } from './project-manager-service/project-manager-projec
     AppProjectManagerMaintainProjectComponent,
     AppProjectManagerModalComponent, ProjectManagerDisplayComponent],
   imports: [CommonModule, AppMaterialImportModule, AppRoutingModule, FormsModule],
-  providers: [ProjectService, ProjectUserService, ProjectManagerDisplayComponent],
+  providers: [ProjectService, ProjectUserService, TaskService, ProjectManagerDisplayComponent, DataSharedService],
   entryComponents: [AppProjectManagerModalComponent],
   exports: [AppProjectManagerHomeComponent,
     AppProjectManagerMaintainUserComponent,

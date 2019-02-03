@@ -90,6 +90,12 @@
       <label class="header-sort-label" [ngClass]="sortByColumn === 'Completed'? 'selected-menu-color':'regular-menu-color'"
         mat-sort-header="Completed" (click)="sortProjectListView('Completed')">Completed</label>
     </span>
+    <span class="span-padding">
+      <label class="header-sort-label">
+        <mat-checkbox class="label-header-font" [checked]="isExcludeProjectDetails" (change)="filterExcludeProjectDetails()">Exclude
+          Suspended Projects</mat-checkbox>
+      </label>
+    </span>
   </div>
   <div class="padding-10px"></div>
   <div class="padding-10px"></div>
@@ -155,7 +161,7 @@
               <tr>
                 <td class="zero-padding  td-align-center">
                   <button mat-raised-button class="mat-button-row2" (click)="suspendProjectToDatabase(resultProjects)"
-                    [hidden]="resultProjects.status === 'Completed' || resultProjects.status === 'Suspended'">Suspend</button>
+                    [hidden]="resultProjects.status === 'Completed' || resultProjects.status === 'Suspended'  || resultProjects.totalTasks === 0">Suspend</button>
                 </td>
               </tr>
             </table>

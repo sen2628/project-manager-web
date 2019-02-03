@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { DataSharedService } from '../project-manager-service/project-manager-data-exchange.service';
 
 
 
@@ -19,8 +20,23 @@ export class AppProjectManagerModalComponent {
   errorSingleMsg: string = null;
   stringIndex: boolean = false;
   isConfirmation: boolean = false;
+  isYesNo: boolean;
 
-  constructor(public activeModal: NgbActiveModal) { }
+  constructor(public activeModal: NgbActiveModal,
+    private dataShareService: DataSharedService) { }
+
+  checkYesNo(checkValue: boolean) {
+
+    if (checkValue) {
+      this.isYesNo = true;
+    } else {
+      this.isYesNo = false;
+    }
+
+    this.dataShareService.setConfirmationValue(this.isYesNo);
+
+    console.log('msg modal - ' + this.isYesNo);
+  }
 
 }
 
@@ -30,6 +46,8 @@ export class AppProjectManagerModalComponent {
   providers: [NgbModalConfig]
 })
 export class ProjectManagerDisplayComponent {
+
+
 
   constructor(private modalService: NgbModal, mdlConfig: NgbModalConfig) {
     mdlConfig.backdrop = 'static';
@@ -58,7 +76,6 @@ export class ProjectManagerDisplayComponent {
       modalRef.componentInstance.errorMsgStyleClass = erStyle;
       modalRef.componentInstance.stringIndex = erIdx;
       modalRef.componentInstance.isConfirmation = erConfirmation;
-
     }
 
   }
@@ -89,6 +106,8 @@ export class ProjectManagerDisplayComponent {
     }
 
   }
+
+
 
 }
 

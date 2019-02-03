@@ -20,7 +20,7 @@ export class ProjectService {
 
   getAllProjects(): Observable<any> {
     return this.projectUserHttpService
-      .get(`${this.baseUrl}/view`)
+      .get(`${this.baseUrl}/getAllProjects`)
       .map((data) => {
         return data;
       })

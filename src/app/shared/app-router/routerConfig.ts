@@ -23,5 +23,9 @@ export const appRoutes: Routes = [
   {
     path: 'prjAddUser',
     component: AppProjectManagerMaintainUserComponent,
+  },
+  {
+    path: 'prjEditTask',
+    component: AppProjectManagerMaintainProjectTaskComponent,
   }
 ];

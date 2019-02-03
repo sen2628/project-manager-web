@@ -1,7 +1,6 @@
-export class ViewTasks {
+export class AddTasks {
   projectId: number;
   projectDesc: string;
-  taskId: number;
   taskName: string;
   taskUserId: number;
   parentId: number;

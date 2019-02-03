@@ -4,6 +4,7 @@ import { Sort } from '@angular/material';
 import { ProjectUserService } from '../project-manager-service/project-manager-user.service';
 import { ProjectManagerDisplayComponent } from '../app-project-manager-modal/app-project-manager-modal.component';
 import { AddUser } from '../project-manager-models/project_manager_add_user.model';
+import { DataSharedService } from '../project-manager-service/project-manager-data-exchange.service';
 
 
 const tempResults: ViewUsers[] = [
@@ -54,7 +55,9 @@ export class AppProjectManagerMaintainUserComponent implements OnInit {
       (userResult.lastName.toLowerCase().indexOf(searchString.toLowerCase()) !== -1));
   }
 
-  constructor(private prjUserService: ProjectUserService, private prjModalService: ProjectManagerDisplayComponent) {
+  constructor(private prjUserService: ProjectUserService,
+    private prjModalService: ProjectManagerDisplayComponent,
+    private prjSharedService: DataSharedService) {
     this.getUserListData();
   }
 
@@ -79,9 +82,17 @@ export class AppProjectManagerMaintainUserComponent implements OnInit {
 
   deleteProjectUserFromDatabase(deleteUserId: number) {
 
-    this.prjUserService.deleteUserFromDatabase(deleteUserId).subscribe((data: any) => {
-      this.prjModalService.modelOpen('Deleted', 'Selected user has been deleted', '', [], true, '', false, false);
-      this.getUserListData();
+    this.prjModalService.modelOpen('Confirmation', 'Are you sure want to delete this User?', '', [], true, '', false, true);
+
+    this.prjSharedService.isConfirmationValueMessage.subscribe((isValue) => {
+      if (isValue) {
+
+        this.prjUserService.deleteUserFromDatabase(deleteUserId).subscribe((data: any) => {
+          this.prjModalService.modelOpen('Deleted', 'Selected user has been deleted', '', [], true, '', false, false);
+          this.getUserListData();
+        })
+
+      }
     })
 
   }
@@ -95,12 +106,21 @@ export class AppProjectManagerMaintainUserComponent implements OnInit {
       userDetail.firstName = this.newUpdateFirstName;
       userDetail.lastName = this.newUpdateLastName;
       userDetail.employeeId = this.newUpdateEmployeeId;
-      this.prjUserService.updateUserToDatabase(this.isEditUserId, userDetail).subscribe((data: any) => {
-        this.prjModalService.modelOpen('Updated', 'User has been updated', '', [], true, '', false, false);
-        this.addUpdateButton = "Add User";
-        this.resetUserDetails();
-        this.getUserListData();
+      this.prjModalService.modelOpen('Confirmation', 'Are you sure want to update this User?', '', [], true, '', false, true);
+
+      this.prjSharedService.isConfirmationValueMessage.subscribe((isValue) => {
+
+        if (isValue) {
+          this.prjUserService.updateUserToDatabase(this.isEditUserId, userDetail).subscribe((data: any) => {
+            this.prjModalService.modelOpen('Updated', 'User has been updated', '', [], true, '', false, false);
+            this.addUpdateButton = "Add User";
+            this.resetUserDetails();
+            this.getUserListData();
+          })
+
+        }
       })
+
 
     } else { // add user details.
 
@@ -119,13 +139,19 @@ export class AppProjectManagerMaintainUserComponent implements OnInit {
           addUserDetail.lastName = this.newUpdateLastName;
           addUserDetail.employeeId = this.newUpdateEmployeeId;
 
-          this.prjUserService.addUserToDatabase(addUserDetail).subscribe((data: any) => {
-            this.prjModalService.modelOpen('Added', 'New User Saved to System', '', [], true, '', false, false);
-            this.resetUserDetails();
-            this.getUserListData();
+          this.prjModalService.modelOpen('Confirmation', 'Are you sure want to Add this new User?', '', [], true, '', false, true);
+
+          this.prjSharedService.isConfirmationValueMessage.subscribe((isValue) => {
+            if (isValue) {
+
+              this.prjUserService.addUserToDatabase(addUserDetail).subscribe((data: any) => {
+                this.prjModalService.modelOpen('Added', 'New User Saved to System', '', [], true, '', false, false);
+                this.resetUserDetails();
+                this.getUserListData();
+              })
+            }
           })
         }
-
 
       } else {
         this.prjModalService.modelOpen('Validation', 'Please Enter Mandatory Fields to Add User', '', [], true, '', false, false);

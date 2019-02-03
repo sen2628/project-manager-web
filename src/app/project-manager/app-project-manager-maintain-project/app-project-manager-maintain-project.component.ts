@@ -7,6 +7,9 @@ import { ProjectUserService } from '../project-manager-service/project-manager-u
 import { ViewUsers } from '../project-manager-models/project_manager_user.model';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { AddProjectTasks } from '../project-manager-models/project_manager_add_project_tasks.model';
+import { DataSharedService } from '../project-manager-service/project-manager-data-exchange.service';
+import { ViewTasks } from '../project-manager-models/project_manager_view_tasks.model';
+import { TaskService } from '../project-manager-service/project-manager-tasks.service';
 
 /* const tempProjectResult: ViewProjectTasks[] = [
   { "projectId": 1000, "projectName": "FSD Program", "projectStartDate": "01-01-2019", "projectEndDate": "01-31-2019", "priority": 0, "status": "Completed", "userId": 100, "completeTasks": 3, "totalTasks": 3 },
@@ -39,17 +42,21 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
   newProjectStartDate = new Date();
   newProjectEndDate = new Date();
   setDefaultDate: boolean = false;
-  userSelectionList: ViewUsers[];
-  filteredUserSelectionList: ViewUsers[];
+  userSelectionList: ViewUsers[] = [];
+  filteredUserSelectionList: ViewUsers[] = [];
   newUserDetails: ViewUsers;
   newManagerName: string;
   newProjectName: string;
-  addUpdateButton: string = "Add Task";
+  addUpdateButton: string = "Add Project";
   isEditFlag: boolean;
   isSuspendFlag: boolean;
   newProjectDetails: AddProjectTasks;
   isProjectStartDateEdit: boolean;
   updateProjectDetails: ViewProjectTasks;
+  updateTasks: ViewTasks[] = [];
+  filteredUpdatedTasks: ViewTasks[] = [];
+  isSuspendUpdateFlag: boolean;
+  isExcludeProjectDetails: boolean;
 
 
   dynamicGrid: Tile[] = [
@@ -108,7 +115,9 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
   constructor(private prjApiService: ProjectService,
     private prjModalService: ProjectManagerDisplayComponent,
     private selectionModalService: NgbModal,
-    private prjUserService: ProjectUserService) {
+    private prjUserService: ProjectUserService,
+    private prjTaskService: TaskService,
+    private prjDataSharedService: DataSharedService) {
     this.projectStepperValue = 0;
     this.setNewProjectDates();
     this.getAllProjectDetailsFromDatabase();
@@ -154,8 +163,9 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
     this.prjApiService.getAllProjects().subscribe((data: any) => {
 
       this.resultProjectList = data;
-      this.updateResultColumn();
+      //  this.updateResultColumn();
       this.prepareDataForSort();
+      this.filterExcludeProjectDetails();
 
     })
 
@@ -175,20 +185,39 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
 
   }
 
-  updateResultColumn() {
+  filterExcludeProjectDetails() {
 
-    if (this.resultProjectList !== null && this.resultProjectList !== undefined) {
+    if (!this.isExcludeProjectDetails) {
 
-      this.resultProjectList.forEach(prjList => {
-        if (prjList.totalTasks === prjList.completeTasks && prjList.completeTasks !== 0) {
-          prjList.status = 'Completed';
-        } else if (prjList.projectStartDate === prjList.projectEndDate) {
-          prjList.status = 'Suspended';
-        }
-      })
+      this.isExcludeProjectDetails = true;
+      this.resultProjectListSortedData = this.resultProjectListSortedData.filter(res => res.status !== "Suspended");
+
+    } else {
+      this.isExcludeProjectDetails = false;
+
+      this.prepareDataForSort();
+
+
     }
 
+
   }
+
+
+  /*   updateResultColumn() {
+  
+      if (this.resultProjectList !== null && this.resultProjectList !== undefined) {
+  
+        this.resultProjectList.forEach(prjList => {
+          if (prjList.totalTasks === prjList.completeTasks && prjList.completeTasks !== 0) {
+            prjList.status = 'Completed';
+          } else if (prjList.projectStartDate === prjList.projectEndDate) {
+            prjList.status = 'Suspended';
+          }
+        })
+      }
+  
+    } */
 
   prepareDataForSort() {
     this.resultProjectListSortedData = this.resultProjectList.slice();
@@ -199,6 +228,7 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
     if (this.newProjectName !== null && this.newProjectName !== undefined && this.newProjectName.trim().length > 0) {
 
       if (this.newProjectEndDate > this.newProjectEndDate) {
+
         this.prjModalService.modelOpen('Validation Error', 'Project End date should be greater than Project Start Date', '', [], true, '', false, false);
       } else {
 
@@ -212,11 +242,22 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
             newProjectAddDetails.priority = this.projectStepperValue;
             newProjectAddDetails.userId = this.newUserDetails.userId;
 
-            this.prjApiService.addProjectToDatabase(newProjectAddDetails).subscribe((data) => {
-              this.prjModalService.modelOpen('Success', 'New Project has been added to database.', '', [], true, '', false, false);
-              this.getAllProjectDetailsFromDatabase();
-              this.resetAddProjectDetails();
-            });
+            this.prjModalService.modelOpen('Confirmation', 'Are you sure want to add this Project?', '', [], true, '', false, true);
+
+            this.prjDataSharedService.isConfirmationValueMessage.subscribe(isValue => {
+
+              if (isValue) {
+
+                this.prjApiService.addProjectToDatabase(newProjectAddDetails).subscribe((data) => {
+                  this.prjModalService.modelOpen('Success', 'New Project has been added to database.', '', [], true, '', false, false);
+                  this.getAllProjectDetailsFromDatabase();
+                  this.resetAddProjectDetails();
+                });
+
+              }
+
+            })
+
           } else {
 
             const modifyProjectDetails = new ViewProjectTasks();
@@ -234,10 +275,18 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
             modifyProjectDetails.totalTasks = this.updateProjectDetails.totalTasks;
             modifyProjectDetails.completeTasks = this.updateProjectDetails.completeTasks;
 
-            this.prjApiService.updateProjectToDatabase(modifyProjectDetails.projectId, modifyProjectDetails).subscribe((data) => {
-              this.prjModalService.modelOpen('Success', 'Project Updated.', '', [], true, '', false, false);
-              this.resetAddProjectDetails();
-              this.getAllProjectDetailsFromDatabase();
+            this.prjModalService.modelOpen('Confirmation', 'Are you sure want to update this Project?', '', [], true, '', false, true);
+
+            this.prjDataSharedService.isConfirmationValueMessage.subscribe(isValue => {
+              if (isValue) {
+
+                this.prjApiService.updateProjectToDatabase(modifyProjectDetails.projectId, modifyProjectDetails).subscribe((data) => {
+                  this.prjModalService.modelOpen('Success', 'Project Updated.', '', [], true, '', false, false);
+                  this.resetAddProjectDetails();
+                  this.getAllProjectDetailsFromDatabase();
+                })
+
+              }
             })
           }
 
@@ -257,13 +306,15 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
 
   suspendProjectToDatabase(resultProjects: ViewProjectTasks) {
 
+    this.isSuspendUpdateFlag = false;
     this.updateProjectDetails = resultProjects;
     const modifyProjectDetails = new ViewProjectTasks();
     modifyProjectDetails.projectId = this.updateProjectDetails.projectId;
     modifyProjectDetails.projectName = this.updateProjectDetails.projectName;
     modifyProjectDetails.projectStartDate = this.updateProjectDetails.projectStartDate;
-    modifyProjectDetails.projectEndDate = this.updateProjectDetails.projectStartDate;
+    modifyProjectDetails.projectEndDate = this.updateProjectDetails.projectEndDate;
     modifyProjectDetails.priority = this.updateProjectDetails.priority;
+
     if (this.updateProjectDetails.userId === undefined) {
       modifyProjectDetails.userId = 0;
     } else {
@@ -289,14 +340,70 @@ export class AppProjectManagerMaintainProjectComponent implements OnInit {
     }
 
 
+    this.prjModalService.modelOpen('Confirmation', 'Are you sure want to suspend this Project?', '', [], true, '', false, true);
 
-    this.prjApiService.updateProjectToDatabase(modifyProjectDetails.projectId, modifyProjectDetails).subscribe((data) => {
-      this.prjModalService.modelOpen('Suspended', 'Project Suspended.', '', [], true, '', false, false);
-      this.resetAddProjectDetails();
-      this.getAllProjectDetailsFromDatabase();
-    })
+    this.delay(3000).then(any => {
+      this.prjDataSharedService.isConfirmationValueMessage.subscribe((isValue) => {
+
+        if (isValue) {
+
+          if (modifyProjectDetails.projectId !== null) {
+            this.methodToUpdateSuspendStatus(modifyProjectDetails.projectId);
+          }
+
+        }
+
+      });
+    });
+
+
+
 
   }
+
+  async delay(ms: number) {
+    await new Promise(resolve => setTimeout(() => resolve(), ms)).then(() => { });
+  }
+
+  methodToUpdateSuspendStatus(projectIdToSuspend: number) {
+
+    this.prjTaskService.getAllTasks().subscribe((data) => {
+      this.updateTasks = data;
+
+      if (this.updateTasks.length > 0 && this.updateTasks !== undefined) {
+
+
+        this.filteredUpdatedTasks = this.updateTasks.filter(task => task.projectId === projectIdToSuspend);
+
+        if (this.filteredUpdatedTasks !== undefined && this.filteredUpdatedTasks.length > 0 && this.filteredUpdatedTasks !== null) {
+
+          this.filteredUpdatedTasks.forEach(taskDet => {
+            taskDet.taskStatus = 'Suspended';
+            taskDet.taskStatusId = 4;
+            this.prjTaskService.updateTaskToDatabase(taskDet).subscribe((data) => {
+              this.isSuspendUpdateFlag = true;
+            })
+          })
+        } else {
+
+          this.isSuspendUpdateFlag = false;
+          this.prjModalService.modelOpen('Message', 'No Tasks associated with this project to suspend the Project.', '', [], true, '', false, false);
+          this.resetAddProjectDetails();
+          this.getAllProjectDetailsFromDatabase();
+        }
+
+        if (this.isSuspendUpdateFlag) {
+
+          this.prjModalService.modelOpen('Suspended', 'Project Suspended.', '', [], true, '', false, false);
+          this.resetAddProjectDetails();
+          this.getAllProjectDetailsFromDatabase();
+        }
+      }
+
+
+    })
+  }
+
 
 
   setProjectDetailsForUpdate(resultPrj: ViewProjectTasks) {
