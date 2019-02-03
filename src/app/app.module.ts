@@ -53,10 +53,10 @@ import { AppHttpServiceModule } from './shared/app-http/app-httpService.module';
     LayoutModule
   ],
   providers: [
-    /*     {
-        provide: APP_BASE_HREF,
-        useValue: "/pmapp/"
-      }, */
+    {
+      provide: APP_BASE_HREF,
+      useValue: "."
+    },
     AppHttpResponseHandler,
     AppHttpService
   ],
