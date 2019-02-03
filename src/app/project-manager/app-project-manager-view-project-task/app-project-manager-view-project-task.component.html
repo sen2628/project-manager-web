@@ -42,6 +42,9 @@
     <div class="padding-10px"></div>
     <div class="padding-10px"></div>
 
+    <div *ngIf="resultProjectTasksSortedData.length === 0">
+      Sorry, No Task associated with this project to display.
+    </div>
     <div class="list-group" *ngFor="let projTaskRows of resultProjectTasksSortedData">
       <mat-card class="mat-card-custom">
 

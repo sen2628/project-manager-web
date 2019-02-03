@@ -4,6 +4,7 @@ export class ViewTasks {
   taskId: number;
   taskName: string;
   taskUserId: number;
+  userName: string;
   parentId: number;
   parentDesc: string;
   priority: number;

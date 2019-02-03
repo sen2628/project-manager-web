@@ -33,9 +33,12 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
   filterParentTaskList: ViewParentTasks[] = [];
   newUserDetails: ViewUsers;
   newManagerName: string;
+  newManagerId: number;
   newProjectName: string;
+  newProjectId: number;
   newProjectDetails: ViewProjectTasks;
   newParentTask: string;
+  newParentId: number;
   newParentTaskDetails: ViewParentTasks;
   isParentTask: boolean;
   newTaskName: string;
@@ -45,6 +48,7 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
   taskTitle: string = "Add Task";
   isEditFlag: boolean;
   editData: ViewTasks = null;
+  isTaskStartDate: boolean;
 
   private _searchUserTerm: string;
 
@@ -136,19 +140,20 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
       this.taskTitle = "Add Task";
       this.addUpdateButton = 'Add Task';
       this.projectStepperValue = 0;
+      this.isTaskStartDate = false;
       this.getAllRequiredDetailsForTasks();
     } else {
       this.taskTitle = "Edit Task";
       this.addUpdateButton = 'Update Task';
+      this.isTaskStartDate = true;
       this.getAllRequiredDetailsForTasks();
       this.setDataForEditTask();
     }
   }
 
   ngOnInit() {
-    this.taskTitle = "Add Task";
-    this.addUpdateButton = 'Add Task';
-    this.projectStepperValue = 0;
+
+
   }
 
   setDataForEditTask() {
@@ -157,44 +162,24 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
 
       this.editData = data;
       this.taskTitle = 'Edit Task';
-      this.addUpdateButton = 'Edit Task';
-      this.newManagerName = null;
-      this.newParentTask = null;
-      this.newProjectName = null;
-      this.newTaskName = null;
-      this.newUserDetails = null;
-      this.newParentTaskDetails = null;
+      this.addUpdateButton = 'Update Task';
 
-      this.userSelectionList.forEach(userDet => {
-        if (userDet.userId === this.editData.taskUserId) {
-          this.newUserDetails = userDet;
-        }
-      })
       this.newTaskName = this.editData.taskName;
 
-      if (this.editData.parentId !== 0) {
-        this.resultParentTaskList.forEach(parentTask => {
-          if (parentTask.parentId === this.editData.parentId) {
-            this.newParentTaskDetails = parentTask;
-          }
-        });
-      }
+      this.newManagerName = this.editData.userName;
+      this.newParentTask = this.editData.parentDesc;
+      this.newParentId = this.editData.parentId;
+
       this.newParentTask = this.editData.parentDesc;
 
       this.projectStepperValue = this.editData.priority;
-      this.taskStartDate = this.editData.taskStartDate;
-      this.taskEndDate = this.editData.taskEndDate;
+      this.taskStartDate = new Date(this.editData.taskStartDate);
+      this.taskEndDate = new Date(this.editData.taskEndDate);
 
-
-      this.resultProjectList.forEach(proj => {
-        if (proj.projectId === this.editData.projectId) {
-
-          this.newProjectDetails = proj;
-        }
-      })
-
+      this.newProjectId = this.editData.projectId;
       this.newProjectName = this.editData.projectDesc;
 
+      this.newManagerId = this.editData.taskUserId;
 
       this.isEditTask = true;
     })
@@ -207,16 +192,6 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
     this.getAllUsers();
     this.getAllParentTasks();
     this.setInitialDate();
-
-    if (!this.isEditTask) {
-
-      this.addUpdateButton = 'Add Task';
-
-    } else {
-      this.addUpdateButton = 'Update Task';
-    }
-
-
   }
 
   setInitialDate() {
@@ -319,44 +294,104 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
     this.getAllRequiredDetailsForTasks();
     this.prjDataSharedService.setAddTaskTitle(false);
     this.router.navigate(['prjAddTask']);
+    this.isTaskStartDate = false;
   }
 
   addUpdateTask() {
 
     if (this.isEditTask) {
 
-      this.prjModalService.modelOpen('Confirmation', 'Are you sure want to add this Task?', '', [], true, '', false, true);
+      let editExecution: boolean = false;
 
-      this.prjDataSharedService.isConfirmationValueMessage.subscribe(isValue => {
+      if (this.newProjectDetails !== undefined && this.newProjectDetails !== null) {
 
-        if (isValue) {
+        const projectEndDate = new Date(this.newProjectDetails.projectEndDate);
+        const taskEndDate = new Date(this.taskEndDate);
 
-          const updateTask = new AddTasks();
-          updateTask.projectId = this.newProjectDetails.projectId;
-          updateTask.projectDesc = this.newProjectDetails.projectName;
-          updateTask.taskName = this.newTaskName;
-          updateTask.taskStartDate = this.taskStartDate;
-          updateTask.taskEndDate = this.taskEndDate;
-          updateTask.priority = this.projectStepperValue;
-          updateTask.taskStatusId = this.editData.taskStatusId
-          updateTask.taskStatus = this.editData.taskStatus;
-          if (this.newParentTask !== null && this.newParentTask !== undefined) {
-            updateTask.parentId = this.newParentTaskDetails.parentId;
-            updateTask.parentDesc = this.newParentTaskDetails.parentDesc;
-          }
-
-          updateTask.taskUserId = this.newUserDetails.userId;
-
-          this.prjTaskService.addTaskToDatabase(updateTask).subscribe((data: any) => {
-
-            this.resetAddTaskData();
-            this.prjModalService.modelOpen('Success', 'Task added successfully', '', [], true, '', false, false);
-
-
-          })
-
+        if (projectEndDate > taskEndDate) {
+          editExecution = true;
+        } else {
+          editExecution = false;
+          this.prjModalService.modelOpen('Validation', 'Task End date should be lesser than or equal to task end date', '', [], true, '', false, false);
         }
-      })
+
+      } else {
+
+        let editConstData: ViewProjectTasks;
+
+        this.resultProjectList.forEach(proj => {
+          if (proj.projectId === this.editData.projectId) {
+            editConstData = proj;
+          }
+        })
+
+        const projectEndDate = new Date(editConstData.projectEndDate);
+        const taskEndDate = new Date(this.taskEndDate);
+
+
+        if (projectEndDate > taskEndDate) {
+          editExecution = true;
+        } else {
+          editExecution = false;
+          this.prjModalService.modelOpen('Validation', 'Task End date should be lesser than or equal to project end date', '', [], true, '', false, false);
+        }
+
+      }
+
+      if (editExecution) {
+        this.prjModalService.modelOpen('Confirmation', 'Are you sure want to add this Task?', '', [], true, '', false, true);
+
+        this.prjDataSharedService.isConfirmationValueMessage.subscribe(isValue => {
+
+          if (isValue) {
+
+            const updateTask = new ViewTasks();
+
+            if (this.newProjectDetails !== null && this.newProjectDetails !== undefined) {
+
+              updateTask.projectId = this.newProjectDetails.projectId;
+              updateTask.projectDesc = this.newProjectDetails.projectName;
+
+            } else {
+              updateTask.projectId = this.editData.projectId;
+              updateTask.parentDesc = this.editData.projectDesc;
+            }
+
+            updateTask.taskName = this.newTaskName;
+            updateTask.taskStartDate = this.taskStartDate;
+            updateTask.taskEndDate = this.taskEndDate;
+            updateTask.priority = this.projectStepperValue;
+            updateTask.taskStatusId = this.editData.taskStatusId
+            updateTask.taskStatus = this.editData.taskStatus;
+            updateTask.taskId = this.editData.taskId;
+
+            if (this.newParentTask !== null && this.newParentTask !== undefined) {
+              updateTask.parentId = this.newParentTaskDetails.parentId;
+              updateTask.parentDesc = this.newParentTaskDetails.parentDesc;
+            } else {
+              updateTask.parentId = this.editData.parentId;
+              updateTask.parentDesc = this.editData.parentDesc;
+            }
+
+            if (this.newUserDetails !== null && this.newUserDetails !== undefined) {
+              updateTask.taskUserId = this.newUserDetails.userId;
+            } else {
+              updateTask.taskUserId = this.editData.taskUserId;
+            }
+
+
+            this.prjTaskService.updateTaskToDatabase(updateTask).subscribe((data: any) => {
+
+              this.resetAddTaskData();
+              this.prjModalService.modelOpen('Success', 'Task Updated successfully', '', [], true, '', false, false);
+
+
+            })
+
+          }
+        })
+
+      }
 
 
     } else {
@@ -427,8 +462,6 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
                     }
 
                     updateTask.taskUserId = this.newUserDetails.userId;
-
-                    console.log(JSON.stringify(updateTask));
 
                     this.prjTaskService.addTaskToDatabase(updateTask).subscribe((data: any) => {
 
