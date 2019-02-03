@@ -12,6 +12,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddTasks } from '../project-manager-models/project_manager_add_tasks.model';
 import { AddParentTasks } from '../project-manager-models/project_manager_add_parent_task.model';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ViewTasks } from '../project-manager-models/project_manager_view_tasks.model';
 
 
 @Component({
@@ -43,6 +44,7 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
   dateFormat: string = 'YYYY-MM-DD';
   taskTitle: string = "Add Task";
   isEditFlag: boolean;
+  editData: ViewTasks = null;
 
   private _searchUserTerm: string;
 
@@ -126,7 +128,6 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
         this.isEditFlag = false;
       } else {
         this.isEditFlag = true;
-
       }
 
     });
@@ -140,7 +141,7 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
       this.taskTitle = "Edit Task";
       this.addUpdateButton = 'Update Task';
       this.getAllRequiredDetailsForTasks();
-
+      this.setDataForEditTask();
     }
   }
 
@@ -148,6 +149,56 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
     this.taskTitle = "Add Task";
     this.addUpdateButton = 'Add Task';
     this.projectStepperValue = 0;
+  }
+
+  setDataForEditTask() {
+
+    this.prjDataSharedService.isEditDataMessage.subscribe((data: any) => {
+
+      this.editData = data;
+      this.taskTitle = 'Edit Task';
+      this.addUpdateButton = 'Edit Task';
+      this.newManagerName = null;
+      this.newParentTask = null;
+      this.newProjectName = null;
+      this.newTaskName = null;
+      this.newUserDetails = null;
+      this.newParentTaskDetails = null;
+
+      this.userSelectionList.forEach(userDet => {
+        if (userDet.userId === this.editData.taskUserId) {
+          this.newUserDetails = userDet;
+        }
+      })
+      this.newTaskName = this.editData.taskName;
+
+      if (this.editData.parentId !== 0) {
+        this.resultParentTaskList.forEach(parentTask => {
+          if (parentTask.parentId === this.editData.parentId) {
+            this.newParentTaskDetails = parentTask;
+          }
+        });
+      }
+      this.newParentTask = this.editData.parentDesc;
+
+      this.projectStepperValue = this.editData.priority;
+      this.taskStartDate = this.editData.taskStartDate;
+      this.taskEndDate = this.editData.taskEndDate;
+
+
+      this.resultProjectList.forEach(proj => {
+        if (proj.projectId === this.editData.projectId) {
+
+          this.newProjectDetails = proj;
+        }
+      })
+
+      this.newProjectName = this.editData.projectDesc;
+
+
+      this.isEditTask = true;
+    })
+
   }
 
   getAllRequiredDetailsForTasks() {
@@ -274,7 +325,40 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
 
     if (this.isEditTask) {
 
-      // update task
+      this.prjModalService.modelOpen('Confirmation', 'Are you sure want to add this Task?', '', [], true, '', false, true);
+
+      this.prjDataSharedService.isConfirmationValueMessage.subscribe(isValue => {
+
+        if (isValue) {
+
+          const updateTask = new AddTasks();
+          updateTask.projectId = this.newProjectDetails.projectId;
+          updateTask.projectDesc = this.newProjectDetails.projectName;
+          updateTask.taskName = this.newTaskName;
+          updateTask.taskStartDate = this.taskStartDate;
+          updateTask.taskEndDate = this.taskEndDate;
+          updateTask.priority = this.projectStepperValue;
+          updateTask.taskStatusId = this.editData.taskStatusId
+          updateTask.taskStatus = this.editData.taskStatus;
+          if (this.newParentTask !== null && this.newParentTask !== undefined) {
+            updateTask.parentId = this.newParentTaskDetails.parentId;
+            updateTask.parentDesc = this.newParentTaskDetails.parentDesc;
+          }
+
+          updateTask.taskUserId = this.newUserDetails.userId;
+
+          this.prjTaskService.addTaskToDatabase(updateTask).subscribe((data: any) => {
+
+            this.resetAddTaskData();
+            this.prjModalService.modelOpen('Success', 'Task added successfully', '', [], true, '', false, false);
+
+
+          })
+
+        }
+      })
+
+
     } else {
 
       if (this.isParentTask) {

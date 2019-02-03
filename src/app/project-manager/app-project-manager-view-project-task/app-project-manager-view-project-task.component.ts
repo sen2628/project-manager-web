@@ -8,6 +8,8 @@ import { ProjectService } from '../project-manager-service/project-manager-proje
 import { DataSharedService } from '../project-manager-service/project-manager-data-exchange.service';
 import { ProjectManagerDisplayComponent } from '../app-project-manager-modal/app-project-manager-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+
 
 /* const tempResults: ViewTasks[] = [
   { projectId: 1000, projectDesc: 'FSD Test Project', taskId: 1, taskDesc: 'Coding', parentId: 2000, parentDesc: 'Development', priority: 10, taskStartDate: '01-JAN-2019', taskEndDate: '25-JAN-2019', taskStatus: 'Completed' },
@@ -66,7 +68,8 @@ export class AppProjectManagerViewProjectTaskComponent implements OnInit {
     private prjProjectService: ProjectService,
     private prjDataSharedService: DataSharedService,
     private prjModalService: ProjectManagerDisplayComponent,
-    private selectionModalService: NgbModal
+    private selectionModalService: NgbModal,
+    private router: Router
   ) {
     this.setDataForGridLoad();
   }
@@ -76,7 +79,7 @@ export class AppProjectManagerViewProjectTaskComponent implements OnInit {
   }
 
   sortData(sort: Sort) {
-    const data = this.resultProjectTasks.slice();
+    const data = this.sortedResultsProjectTasksData;
     if (!sort.active || sort.direction === '') {
       this.resultProjectTasksSortedData = data;
       return;
@@ -113,6 +116,7 @@ export class AppProjectManagerViewProjectTaskComponent implements OnInit {
 
         if (this.resultProjectNoSuspend.length > 0) {
           this.resultProjectTasksSortedData = this.resultProjectTasks.filter(task => task.projectId === tempProjectResult[0].projectId).slice();
+          this.sortedResultsProjectTasksData = this.resultProjectTasksSortedData;
           this.projectSearch = tempProjectResult[0].projectName;
         }
 
@@ -135,8 +139,11 @@ export class AppProjectManagerViewProjectTaskComponent implements OnInit {
 
   }
 
-  editProjectTasks(taskId: number) {
+  editProjectTasks(taskDet: ViewTasks) {
 
+    this.prjDataSharedService.setEditData(taskDet);
+    this.prjDataSharedService.setAddTaskTitle(true);
+    this.router.navigate(['prjEditTask']);
   }
 
 
@@ -160,7 +167,7 @@ export class AppProjectManagerViewProjectTaskComponent implements OnInit {
           this.prjTaskService.getAllTasks().subscribe((data: any) => {
             this.resultProjectTasks = data;
             this.resultProjectTasksSortedData = this.resultProjectTasks.filter(task => task.projectId === this.projectSearchId).slice();
-
+            this.sortedResultsProjectTasksData = this.resultProjectTasksSortedData;
             this.prjModalService.modelOpen('Success', 'Task completed successfully', '', [], true, '', false, false);
 
           })
@@ -171,10 +178,13 @@ export class AppProjectManagerViewProjectTaskComponent implements OnInit {
 
   }
 
+
+
   projectModelRowClick(projectDetails: ViewProjectTasks) {
 
     this.projectSearch = projectDetails.projectName;
     this.resultProjectTasksSortedData = this.resultProjectTasks.filter(task => task.projectId === projectDetails.projectId).slice();
+    this.sortedResultsProjectTasksData = this.resultProjectTasksSortedData;
 
   }
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { ViewTasks } from '../project-manager-models/project_manager_view_tasks.model';
 
 
 @Injectable()
@@ -10,6 +11,10 @@ export class DataSharedService {
 
   isAddTaskMenu: boolean;
   isAddTaskMenuMessage = new BehaviorSubject<boolean>(this.isAddTaskMenu)
+
+  isEditData: ViewTasks = null;
+  isEditDataMessage = new BehaviorSubject(this.isEditData);
+
 
   constructor() { }
 
@@ -26,5 +31,10 @@ export class DataSharedService {
   setAddTaskTitle(isEditTitle: boolean) {
     this.isAddTaskMenuMessage.next(isEditTitle);
     this.isAddTaskMenu = isEditTitle;
+  }
+
+  setEditData(taskDetails: ViewTasks) {
+    this.isEditDataMessage.next(taskDetails);
+    this.isEditData = taskDetails;
   }
 }

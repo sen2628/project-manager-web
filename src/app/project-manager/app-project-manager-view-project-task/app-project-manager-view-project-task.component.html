@@ -62,7 +62,7 @@
             <td class="table-cols5 table-result-data">{{projTaskRows.taskEndDate}}</td>
             <td class="table-cols6 table-result-data" *ngIf="projTaskRows.taskStatus !== 'Completed' && projTaskRows.taskStatus !== 'Suspended'">
               <span class="button-spacing">
-                <button mat-raised-button class="mat-button-row1" (click)="editProjectTasks(projTaskRows.taskId)">Edit</button></span>
+                <button mat-raised-button class="mat-button-row1" (click)="editProjectTasks(projTaskRows)">Edit</button></span>
               <span class="button-spacing"><button mat-raised-button class="mat-button-row1" (click)="endProjectTasks(projTaskRows)">End
                   Task</button></span>
             </td>

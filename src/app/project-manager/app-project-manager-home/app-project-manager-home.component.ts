@@ -30,6 +30,7 @@ export class AppProjectManagerHomeComponent implements OnInit {
 
     this.dataSharedService.isAddTaskMenuMessage.subscribe((isValue) => {
       this.isEditMenuValue = isValue;
+      this.thisChangeMenuTitle();
     })
 
 
@@ -37,8 +38,8 @@ export class AppProjectManagerHomeComponent implements OnInit {
 
   thisChangeMenuTitle() {
     if (this.isEditMenuValue) {
-
       this.menuLink = 'Edit Task';
+      this.selectedMenuLink = 'task';
     } else {
       this.menuLink = 'Add Task';
     }
@@ -49,6 +50,7 @@ export class AppProjectManagerHomeComponent implements OnInit {
     this.selectedMenuLink = inputLink;
 
     if (this.selectedMenuLink === 'vTask') {
+      this.dataSharedService.setAddTaskTitle(false);
       this.router.navigate(['prjViewTask']);
     } else if (this.selectedMenuLink === 'task') {
       if (this.isEditMenuValue) {
@@ -59,8 +61,10 @@ export class AppProjectManagerHomeComponent implements OnInit {
         this.router.navigate(['prjAddTask']);
       }
     } else if (this.selectedMenuLink === 'project') {
+      this.dataSharedService.setAddTaskTitle(false);
       this.router.navigate(['prjAddProject']);
     } else if (this.selectedMenuLink === 'user') {
+      this.dataSharedService.setAddTaskTitle(false);
       this.router.navigate(['prjAddUser']);
     }
   }
