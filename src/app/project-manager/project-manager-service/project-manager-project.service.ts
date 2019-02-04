@@ -11,7 +11,8 @@ import { ProjectManagerDisplayComponent } from '../app-project-manager-modal/app
 @Injectable()
 export class ProjectService {
 
-  private baseUrl = 'http://localhost:8080/project';
+  // private baseUrl = 'http://localhost:8080/project'; //local service
+  private baseUrl = 'http://localhost:8085/pmappservice/project'; //server deployment
 
   constructor(
     private projectUserHttpService: AppHttpService,
