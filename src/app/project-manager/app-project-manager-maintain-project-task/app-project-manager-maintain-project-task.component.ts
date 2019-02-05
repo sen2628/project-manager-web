@@ -435,7 +435,7 @@ export class AppProjectManagerMaintainProjectTaskComponent implements OnInit {
           const projectEndDate = new Date(this.newProjectDetails.projectEndDate);
 
 
-          if (this.taskStartDate <= projectStartDate) {
+          if (this.taskStartDate >= projectStartDate) {
 
             if (this.taskEndDate >= this.taskStartDate) {
 
